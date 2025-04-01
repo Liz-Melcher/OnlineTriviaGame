@@ -1,0 +1,42 @@
+<mxfile host="65bd71144e">
+    <diagram id="f5EP-19Y5py2qcnWYEqL" name="Page-1">
+        <mxGraphModel dx="1264" dy="802" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Home" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="20" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Log Out&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="690" y="20" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.rrect;rSize=5;strokeColor=#DFDFDF;html=1;whiteSpace=wrap;fillColor=#ffffff;fontColor=#000000;verticalAlign=bottom;align=left;spacing=20;spacingBottom=130;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="190" width="720" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Fun IMAGE HEre&amp;nbsp;" style="html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.topButton;rSize=5;perimeter=none;whiteSpace=wrap;fillColor=#868E96;strokeColor=#DFDFDF;fontColor=#DEE2E6;resizeWidth=1;fontSize=18;" parent="17" vertex="1">
+                    <mxGeometry width="720" height="180" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;&lt;b&gt;Play New Trivia Game&amp;nbsp;&lt;/b&gt;&lt;/span&gt;" style="perimeter=none;html=1;whiteSpace=wrap;fillColor=none;strokeColor=none;resizeWidth=1;verticalAlign=top;align=left;spacing=20;spacingTop=-10;fontSize=14;" parent="17" vertex="1">
+                    <mxGeometry width="720" height="120" relative="1" as="geometry">
+                        <mxPoint y="180" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="Continue Existing Game&amp;nbsp;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;" style="html=1;shadow=0;dashed=0;strokeColor=none;fontSize=14;fillColor=none;perimeter=none;whiteSpace=wrap;resizeWidth=1;align=left;spacing=10;" parent="17" vertex="1">
+                    <mxGeometry width="720" height="30" relative="1" as="geometry">
+                        <mxPoint y="300" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="High Scores&amp;nbsp;" style="strokeColor=inherit;fillColor=inherit;gradientColor=inherit;fontColor=inherit;html=1;shadow=0;dashed=0;perimeter=none;fontSize=14;whiteSpace=wrap;resizeWidth=1;align=left;spacing=10;" parent="17" vertex="1">
+                    <mxGeometry width="720" height="30" relative="1" as="geometry">
+                        <mxPoint y="330" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="Settings&amp;nbsp;" style="strokeColor=inherit;fillColor=inherit;gradientColor=inherit;fontColor=inherit;html=1;shadow=0;dashed=0;shape=mxgraph.bootstrap.bottomButton;rSize=5;perimeter=none;fontSize=14;whiteSpace=wrap;resizeWidth=1;resizeHeight=0;align=left;spacing=10;" parent="17" vertex="1">
+                    <mxGeometry width="720" height="30" relative="1" as="geometry">
+                        <mxPoint y="360" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
