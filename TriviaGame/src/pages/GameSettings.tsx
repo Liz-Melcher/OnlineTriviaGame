@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import AppNavBar from '../components/NavBar';
 
 const GameSettings: React.FC = () => {
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
@@ -28,11 +29,21 @@ const GameSettings: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const queryString = `?amount=${amount}&difficulty=${difficulty}&category=${category}&type=${type}`;
-    navigate(`/quiz${queryString}`);
+    //const queryString = `?amount=${amount}&difficulty=${difficulty}&category=${category}&type=${type}`;
+    navigate('/quiz', {
+        state: {
+          amount: parseInt(amount),
+          difficulty,
+          category,
+          type,
+        },
+      });
   };
 
   return (
+    <>
+    <AppNavBar />
+    
     <Container className="py-5">
       <h1 className="text-center mb-4">Create Your Custom Trivia Game</h1>
       <Card className="p-4 shadow-sm">
@@ -76,6 +87,7 @@ const GameSettings: React.FC = () => {
         </Form>
       </Card>
     </Container>
+    </>
   );
 };
 
