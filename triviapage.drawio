@@ -40,8 +40,8 @@
                 <mxCell id="30" value="Question 1/10..." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="600" y="280" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="35" value="Notes: Only 1 question is visible at a time; the questions appear randomly.&amp;nbsp;&lt;div&gt;Questions are only worth 1 point. All questions are worth the same.&lt;/div&gt;&lt;div&gt;Right now the API is calling random questions&lt;/div&gt;&lt;div&gt;Feature may be to have themed trivia using the API?&amp;nbsp;&lt;/div&gt;&lt;div&gt;If themed trivia, can we change the title/pic based on the theme?&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
-                    <mxGeometry x="50" y="690" width="760" height="130" as="geometry"/>
+                <mxCell id="35" value="Questions will appear 1 at a time&lt;div&gt;Questions are all worth 1 point right now - should medium be 2 points and hard be 3 points&amp;nbsp;&lt;/div&gt;&lt;div&gt;If users pick a certain category, can we have a special title or background image&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="600" width="760" height="130" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
