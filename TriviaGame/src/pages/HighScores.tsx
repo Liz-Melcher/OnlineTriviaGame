@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Table, Button } from 'react-bootstrap';
 import AppNavBar from '../components/NavBar';
+//TO DO: Look at the final import in NavBar from Gamals code; cange it here and in the return()HTML below 
 
 // Optional: a simple map to show category names for known IDs
+// do we want categories in the high scores list?  I think it makes it fun
 const categoryMap: Record<string, string> = {
   '9': 'General Knowledge',
   '10': 'Books',
@@ -13,29 +15,35 @@ const categoryMap: Record<string, string> = {
   // Add more categories as needed
 };
 
+//Summary of past games; the shape of a completed game saved to localStorage 
 type GameSummary = {
   score: number;
   totalQuestions: number;
   difficulty: string;
-  category: string;
-  date: string;
+  category: string; // Category ID is a string from the trivia API 
+  date: string; // ISO time stamp string; TO DO: do we want this? 
 };
 
+
 const HighScores: React.FC = () => {
+    // Store the list of high score records from local storage 
   const [highScores, setHighScores] = useState<GameSummary[]>([]);
 
   useEffect(() => {
+    //load high scores from local storage 
     const storedScores = localStorage.getItem('highScores');
     if (storedScores) {
       setHighScores(JSON.parse(storedScores));
     }
   }, []);
 
+  // Clear all high scores
+  // ask for confirmation before clearing scores 
   const handleClear = () => {
     const confirmClear = window.confirm('Are you sure you want to clear all high scores?');
     if (confirmClear) {
-      localStorage.removeItem('highScores');
-      setHighScores([]);
+      localStorage.removeItem('highScores'); // removes from browser storage 
+      setHighScores([]); // clears the statue of highScores to a blank array 
     }
   };
 
