@@ -22,6 +22,7 @@ const AppNavBar: React.FC = () => {
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/settings">Game Settings</Nav.Link>
             <Nav.Link as={Link} to="/quiz">Quiz</Nav.Link>
+            <Nav.Link as={Link} to="/highscores">High Scores</Nav.Link>
             {/* Add more Nav.Links as needed */}
           </Nav>
           <Button variant="outline-light" onClick={handleLogout}>Log Out</Button>
