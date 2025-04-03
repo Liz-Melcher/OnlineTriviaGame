@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Table, Button } from 'react-bootstrap';
-import AppNavBar from '../components/NavBar';
-//TO DO: Look at the final import in NavBar from Gamals code; cange it here and in the return()HTML below 
+//TODO Import NavBar 
 
 // Optional: a simple map to show category names for known IDs
 // do we want categories in the high scores list?  I think it makes it fun
@@ -49,7 +48,7 @@ const HighScores: React.FC = () => {
 
   return (
     <>
-      <AppNavBar />
+      
       <Container className="py-5">
         <h1 className="text-center mb-4">🏆 High Scores</h1>
 

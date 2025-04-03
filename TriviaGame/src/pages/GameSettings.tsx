@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap'; // react bootstrap makes the nav bar mobile friendly, among other features 
 import { useNavigate } from 'react-router-dom';
-import AppNavBar from '../components/NavBar'; // 4/2/2025 this is from Liz's code for testing;
-// TO DO: Check that AppNavBar is the final name; if not it needs to changed on the import, and in the return section
+//TODO: Import navigation bar
 
 
 //GameSettings allows users to customize their trivia game using the open trivia API options
@@ -51,7 +50,7 @@ const GameSettings: React.FC = () => {
 
   return (
     <>
-    <AppNavBar />
+    
     
     <Container className="py-5">
       <h1 className="text-center mb-4">Create Your Custom Trivia Game</h1>

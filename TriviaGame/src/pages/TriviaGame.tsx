@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 import { useLocation, useNavigate } from 'react-router-dom';
 import AppNavBar from '../components/NavBar'; // 4/2/2025 - Liz made the AppNavBar for testing
-//TO DO: check the final NavBar component for the import name.  Import name will need to changed in this section as well as in the return (HTML section)
+//TODO: check the final NavBar component for the import name.  Import name will need to changed in this section as well as in the return (HTML section)
 
 // Define question shape from the API
 type Question = {
