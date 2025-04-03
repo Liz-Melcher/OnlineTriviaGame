@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card } from 'react-bootstrap'; // react bootstrap makes the nav bar mobile friendly, among other features 
 import { useNavigate } from 'react-router-dom';
-import AppNavBar from '../components/NavBar';
+import AppNavBar from '../components/NavBar'; // 4/2/2025 this is from Liz's code for testing;
+// TO DO: Check that AppNavBar is the final name; if not it needs to changed on the import, and in the return section
 
+
+//GameSettings allows users to customize their trivia game using the open trivia API options
+//some options from the API are disabled, specifically the true false option
 const GameSettings: React.FC = () => {
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
-  const [amount, setAmount] = useState('10');
-  const [difficulty, setDifficulty] = useState('easy');
-  const [category, setCategory] = useState('');
-  const type = 'multiple';
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]); //list of categories fetched from the trivia API as an array 
+  const [amount, setAmount] = useState('10'); //defaults to 10 questions 
+  const [difficulty, setDifficulty] = useState('easy'); // defaults to easy difficulty 
+  const [category, setCategory] = useState(''); //defaults to the 'any' category 
+  const type = 'multiple'; //multiple choice questions only; no True False 
   const navigate = useNavigate();
 
+  
+  //Fetch trivia categories from the Open trivia database API when mounted 
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const res = await fetch('https://opentdb.com/api_category.php');
+        const res = await fetch('https://opentdb.com/api_category.php'); //this is the api website 
         const data = await res.json();
         setCategories(data.trivia_categories);
+        // Defaults to the first category in the array list if available 
         if (data.trivia_categories.length > 0) {
           setCategory(data.trivia_categories[0].id.toString());
         }
@@ -27,10 +34,12 @@ const GameSettings: React.FC = () => {
     loadCategories();
   }, []);
 
+  //handle the form submission and navigate to the quiz page with the settings passed .
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //const queryString = `?amount=${amount}&difficulty=${difficulty}&category=${category}&type=${type}`;
     navigate('/quiz', {
+        // pass the settings to the TriviaGame page 
         state: {
           amount: parseInt(amount),
           difficulty,
