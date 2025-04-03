@@ -28,7 +28,7 @@ app.get("/game", function(req, res) {
 app.get("/game/custom", function(req, res) {
     req.query; // The game parameters from the GET request
     // Gets trivia questions from Custom Question table. Stores them into an array.
-    res.send("GET /trivia");
+    res.send("GET /trivia/custom");
 })
 
 app.get("/game/:questionId", function(req, res) {
