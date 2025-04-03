@@ -109,14 +109,28 @@ const TriviaGame: React.FC = () => {
       setScore(prev => prev + 1);
     }
   };
-  // then the question number is greater than or equal to the total number of questions; game is over
-  const handleNext = () => {
+  const handleNext = () => { // when the question number is going over the number of total questions, the game is over 
     if (questionNum >= totalQuestions) {
       setGameOver(true);
-      localStorage.removeItem('savedGame'); // clear saved game on completion
+
+      // Save completed game to high scores
+      const gameSummary = {
+        score,
+        totalQuestions,
+        difficulty,
+        category,
+        date: new Date().toISOString(),
+      };
+
+      //prevScores will be saved as an array
+      //updatedScores will append the previous scores with the current game summary 
+      //the saved game state will be removed from local storage once it is played through
+      const prevScores = JSON.parse(localStorage.getItem('highScores') || '[]');
+      const updatedScores = [gameSummary, ...prevScores];
+      localStorage.setItem('highScores', JSON.stringify(updatedScores));
+
+      localStorage.removeItem('savedGame');
     } else {
-        //when the question number is less than the total number of questions, the game moves to the next question
-        //when the game moves to the next question no answers are selected 
       setQuestionNum(prev => prev + 1);
       setSelectedAnswer(null);
     }
