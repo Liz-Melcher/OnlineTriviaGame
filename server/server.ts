@@ -1,5 +1,13 @@
 import express from "express";
+import { Request, Response } from "express";
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { sequelize } from "./models/index.js";
+import { User } from "./models/user.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -8,15 +16,38 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
 // LOGIN ROUTES
-app.post("/login", function(_req, res) {
-    res.end("POST /login")
-})
+app.post("/login", async (req: Request, res: Response) => {
+    try {
+        const { username, password } = req.body;
 
-app.post("/logout", function(_req, res) {
-    res.end("POST /logout")
-})
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username or password' });
+        }
+
+        // Compare the provided password with the stored hashed password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+        if (!isPasswordValid) {
+          return void res.status(400).json({ message: 'Invalid username or password' });
+        }
+    
+        // Password is valid, respond with JWT token
+        const token = jwt.sign({ "username": username }, process.env.JWT_SECRET_KEY!, { expiresIn: "30m" });
+        res.status(200).json({ "token": token });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Logout will be handled client side by destroying the JWT token
+// app.post("/logout", function(_req, res) {
+//     res.end("POST /logout")
+// })
 
 
 // GAME ROUTES
@@ -121,7 +152,7 @@ app.delete("/customquestions/delete/:questionId", function(req, res) {
 })
 
 // Create models in database
-sequelize.sync({ force: true}).then(() => console.log("All models synced succssfully"))
+sequelize.sync({ force: false, logging: false }).then(() => console.log("All models synced succssfully"))
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
