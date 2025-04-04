@@ -2,6 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
+import { UserFactory } from './user.js';
+import { GameStateFactory } from './gamestate.js';
+import { SettingsFactory } from './settings.js';
+import { CustomQuestionFactory } from './customquestion.js';
 
 const sequelize = process.env.DB_URL
   ? new Sequelize(process.env.DB_URL)
@@ -13,9 +17,10 @@ const sequelize = process.env.DB_URL
       },
     });
 
-import User from './user';
-import GameState from './gamestate';
-import Settings from './settings';
-import CustomQuestion from './customquestion';
+// Factories initialize the models with the sequelize instance
+UserFactory(sequelize);
+GameStateFactory(sequelize);
+SettingsFactory(sequelize);
+CustomQuestionFactory(sequelize);
 
-export { sequelize, User, GameState, Settings, CustomQuestion };
+export { sequelize };

@@ -1,5 +1,5 @@
 import express from "express";
-import { sequelize } from "./models/index";
+import { sequelize } from "./models/index.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
