@@ -1,1 +1,0 @@
-//use this to map over an array of past results; this will have many results, not just the most recent game
