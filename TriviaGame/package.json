@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "server:build": "cd server && npm run build",
+    "server": "cd server && npm run start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@types/express": "^5.0.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "jwt-decode": "^4.0.0",
