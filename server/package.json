@@ -12,6 +12,7 @@
         "dotenv": "^16.4.7",
         "express": "^5.1.0",
         "pg": "^8.14.1",
-        "sequelize": "^6.37.7"
+        "sequelize": "^6.37.7",
+        "typescript": "^5.8.2"
     }
 }
