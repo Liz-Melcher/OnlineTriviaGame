@@ -1,0 +1,26 @@
+Run "db/createdb.sql" with PostgreSQL to create the DB.
+Note that you must create a ".env" file with the needed parameters. See ".env.example" as an example.
+
+To start server, use "npm run start". To seed the DB, first run "npm run seed".
+
+Default host is "localhost" and default port is 3001.
+
+POST Route: "/login"
+  This route verifies the username and password exists on the server DB and returns an object with a JWT token if successful.
+  Body parameters:
+    "username"
+    "password"
+
+GET Route: "/game"
+  This route retrieves a series of questions from the Open Trivia Database API and stores them on the server.
+  Query parameters: 
+    "amount": number of questions
+    "category": name of category (use the exact name from the Category drop down at https://opentdb.com/api_config.php)
+    "difficulty": difficulty level
+  Example: "http://localhost:3001/game?amount=20&category=Mythology&difficulty=medium"
+
+GET Route: "/game/:questionId"
+  This route retrieves a quesion number from a stored game.
+  Route Parameters:
+    ":questionId": Question number to retrieve.
+  Example: "http://localhost:3001/game/5"
