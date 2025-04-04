@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "server:build": "cd server && npm run build",
+    "server": "cd server && npm run start",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -14,7 +16,6 @@
     "@types/express": "^5.0.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "express": "^5.1.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
