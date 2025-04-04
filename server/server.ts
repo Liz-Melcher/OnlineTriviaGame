@@ -8,6 +8,7 @@ dotenv.config();
 
 import { sequelize } from "./models/index.js";
 import { User } from "./models/user.js";
+import authenticateToken from "./authenticate-token.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
