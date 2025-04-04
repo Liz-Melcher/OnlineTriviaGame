@@ -1,38 +1,55 @@
 // models/settings.ts
-import { DataTypes } from 'sequelize';
-import { sequelize } from './index';
-import User from './user';
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
-const Settings = sequelize.define('Settings', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  userid: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id',
+import { sequelize } from './index.js';
+import { User } from './user.js'; // Import the User model for the foreign key reference
+
+class Settings extends Model {
+  declare id: number;
+  declare userid: number;
+  declare difficulty: string;
+  declare scores: object[]; // JSONB array
+  declare darkmode: boolean;
+}
+
+function SettingsFactory(sequelize: Sequelize) {
+  Settings.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      userid: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: User,  // References the User model
+          key: 'id',
+        }, 
+        onDelete: 'CASCADE',  // Ensures that deleting a user also deletes their game state
+      },
+      difficulty: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      scores: { 
+        type: DataTypes.ARRAY(DataTypes.JSONB),  // Stores an array of JSON objects
+        allowNull: false,
+        defaultValue: [],
+      },
+      darkmode: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
-    onDelete: 'CASCADE',
-  },
-  difficulty: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  scores: {
-    type: DataTypes.ARRAY(DataTypes.JSONB),
-    allowNull: false,
-    defaultValue: [],
-  },
-  darkmode: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-  },
-});
+    {
+      sequelize,
+      modelName: "Settings",
+    }
+  )
+}
 
-export default Settings;
+export { Settings, SettingsFactory }
