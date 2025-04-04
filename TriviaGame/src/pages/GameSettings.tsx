@@ -10,7 +10,8 @@ const GameSettings: React.FC = () => {
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]); //list of categories fetched from the trivia API as an array 
   const [amount, setAmount] = useState('10'); //defaults to 10 questions 
   const [difficulty, setDifficulty] = useState('easy'); // defaults to easy difficulty 
-  const [category, setCategory] = useState(''); //defaults to the 'any' category 
+  //TODO pull in difficulty from user settings? 
+  const [category, setCategory] = useState(''); //defaults to the 'general knowledge' category 
   const type = 'multiple'; //multiple choice questions only; no True False 
   const navigate = useNavigate();
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 import { useLocation, useNavigate } from 'react-router-dom';
-import AppNavBar from '../components/NavBar'; // 4/2/2025 - Liz made the AppNavBar for testing
+//import AppNavBar from '../components/NavBar'; // 4/2/2025 - Liz made the AppNavBar for testing
 //TODO: check the final NavBar component for the import name.  Import name will need to changed in this section as well as in the return (HTML section)
 
 // Define question shape from the API
@@ -59,6 +59,7 @@ const TriviaGame: React.FC = () => {
     : [];
 
   // Load saved game or fetch new questions
+  //TODO eventually this will be on the server side 
   useEffect(() => {
     if (!state) { // if the user visits the TriviaGame without a game state, send them back to the home page 
       navigate('/');
@@ -68,6 +69,7 @@ const TriviaGame: React.FC = () => {
 
     const saved = localStorage.getItem('savedGame');
     //getting the game state of a saved game 
+    //TODO: this will eventually be pulled in from the server 
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed.questions && parsed.questionNum && parsed.score !== undefined) {
@@ -85,6 +87,7 @@ const TriviaGame: React.FC = () => {
   }, []);
 
   // Fetch all questions at once; this way if a user needs to save a game and come back later they can 
+  //TODO eventually this function will move to the server side 
   const fetchAllQuestions = async () => {
     const url = `https://opentdb.com/api.php?amount=${totalQuestions}&difficulty=${difficulty}&category=${category}&type=${type}`;
     const res = await fetch(url);
@@ -125,6 +128,7 @@ const TriviaGame: React.FC = () => {
       //prevScores will be saved as an array
       //updatedScores will append the previous scores with the current game summary 
       //the saved game state will be removed from local storage once it is played through
+      //TODO: eventually this should be pulled from the database, not local storage
       const prevScores = JSON.parse(localStorage.getItem('highScores') || '[]');
       const updatedScores = [gameSummary, ...prevScores];
       localStorage.setItem('highScores', JSON.stringify(updatedScores));
@@ -146,6 +150,7 @@ const TriviaGame: React.FC = () => {
 //  <Button variant="outline-primary" className="mt-3 ms-2" onClick={() => navigate('/settings')}>
 //   Change Settings
 //  </Button>
+//TODO eventually this will be stored on the server 
   const handleRestart = () => {
     setScore(0);
     setQuestionNum(1);
@@ -156,6 +161,7 @@ const TriviaGame: React.FC = () => {
   };
   
   // handles the game save so a user can come back later 
+  //TODO this will eventually be saved to the server database; not local storage 
   const handleSave = () => {
     const gameToSave = {
       questions,
@@ -168,7 +174,7 @@ const TriviaGame: React.FC = () => {
 
   return (
     <>
-      <AppNavBar />
+      
 
       <Container className="py-5">
         <div className="text-center mb-4">

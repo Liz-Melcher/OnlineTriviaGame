@@ -30,6 +30,7 @@ const HighScores: React.FC = () => {
 
   useEffect(() => {
     //load high scores from local storage 
+    //TODO this will be saved on the back end instead of local storage 
     const storedScores = localStorage.getItem('highScores');
     if (storedScores) {
       setHighScores(JSON.parse(storedScores));
@@ -38,6 +39,7 @@ const HighScores: React.FC = () => {
 
   // Clear all high scores
   // ask for confirmation before clearing scores 
+  //TODO this will be saved on the back end instead of local storage 
   const handleClear = () => {
     const confirmClear = window.confirm('Are you sure you want to clear all high scores?');
     if (confirmClear) {
