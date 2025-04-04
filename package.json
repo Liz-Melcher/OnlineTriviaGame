@@ -1,4 +1,8 @@
 {
+  "scripts": {
+      "server": "cd server && npm run build && node dist/seeds/index.js && node dist/server.js",
+      "server:no-seed": "cd server && npm run start"
+  },
   "devDependencies": {
     "vite": "^6.2.4"
   }
