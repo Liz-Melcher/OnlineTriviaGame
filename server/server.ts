@@ -1,6 +1,5 @@
 import express from "express";
 import { sequelize } from "./models/index";
-import User from "./models/user";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -122,7 +121,7 @@ app.delete("/customquestions/delete/:questionId", function(req, res) {
 })
 
 // Create models in database
-User.sync({ force: true }).then(() => console.log("User sync successful"))
+sequelize.sync({ force: true}).then(() => console.log("All models synced succssfully"))
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

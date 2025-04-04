@@ -13,4 +13,7 @@ const sequelize = process.env.DB_URL
       },
     });
 
-export { sequelize };
+import User from './user';
+import GameState from './gamestate';
+
+export { sequelize, User, GameState };
