@@ -15,5 +15,7 @@ const sequelize = process.env.DB_URL
 
 import User from './user';
 import GameState from './gamestate';
+import Settings from './settings';
+import CustomQuestion from './customquestion';
 
-export { sequelize, User, GameState };
+export { sequelize, User, GameState, Settings, CustomQuestion };
