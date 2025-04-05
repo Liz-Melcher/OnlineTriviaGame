@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { categories } from "../assets/categories.js";
-import { ClientQuestion } from "../../interfaces/ClientQuestion.js"
+import { ClientQuestion } from "../interfaces/ClientQuestion.js"
 
 export interface APIQuestion {
     type: string,

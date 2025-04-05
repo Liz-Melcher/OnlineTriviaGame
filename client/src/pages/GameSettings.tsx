@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap'; // react bootstrap makes the nav bar mobile friendly, among other features 
 import { useNavigate } from 'react-router-dom';
-//TODO: Import navigation bar
+
 
 
 //GameSettings allows users to customize their trivia game using the open trivia API options

@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 import { useLocation, useNavigate } from 'react-router-dom';
-//import AppNavBar from '../components/NavBar'; // 4/2/2025 - Liz made the AppNavBar for testing
-//TODO: check the final NavBar component for the import name.  Import name will need to changed in this section as well as in the return (HTML section)
 
-// Define question shape from the API
+
 type Question = {
-  question: string; //question is a string 
-  correct_answer: string; // correct answer is a string 
-  incorrect_answers: string[]; // incorrect answers are an array of strings 
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
 };
 
-// Define game settings passed from GameSettings
 type LocationState = {
-  amount: number; //amount of questions (possible values are 10, 25, and 50)
-  difficulty: string; // difficulty of questions (possible values are easy, medium, hard)
-  category: string; // category of questions is a string that comes from the Open Trivia Api 
-  type: string; // Type of questions; for this game all questions are multiple choice 
+  amount: number;
+  difficulty: string;
+  category: string;
+  type: string;
 };
 
-// Decode HTML entities from API
-// so values like ", &, ', < , > display correctly and not as &amp; etc 
 const decodeHTML = (html: string): string => {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;
   return txt.value;
 };
 
-// Shuffle an array; this makes it so the correct answer isn't always in the same position in the array 
 const shuffleArray = (array: string[]): string[] =>
   [...array].sort(() => Math.random() - 0.5);
 
@@ -36,87 +30,85 @@ const TriviaGame: React.FC = () => {
   const navigate = useNavigate();
   const state = location.state as LocationState | undefined;
 
-  // Use default settings if none provided
-  const totalQuestions = state?.amount ?? 10; 
+  const totalQuestions = state?.amount ?? 10;
   const difficulty = state?.difficulty ?? 'easy';
   const category = state?.category ?? '9';
   const type = state?.type ?? 'multiple';
 
-  // Game state
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionNum, setQuestionNum] = useState(1);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [gameOver, setGameOver] = useState(false);
 
-  // Current question and answers
-  const currentQuestion = questions[questionNum - 1]; // current questions is questions from the array of questions
-  const answers = currentQuestion // shuffling the array  so the correct answer isn't always in the same position 
+  const currentQuestion = questions[questionNum - 1];
+  const answers = currentQuestion
     ? shuffleArray([
         ...currentQuestion.incorrect_answers,
         currentQuestion.correct_answer,
       ])
     : [];
 
-  // Load saved game or fetch new questions
-  //TODO eventually this will be on the server side 
   useEffect(() => {
-    if (!state) { // if the user visits the TriviaGame without a game state, send them back to the home page 
-      navigate('/');
-      return;
-      // a game state can come from GameSettings.tsx or it can come from a saved game
-    }
-
-    const saved = localStorage.getItem('savedGame');
-    //getting the game state of a saved game 
-    //TODO: this will eventually be pulled in from the server 
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.questions && parsed.questionNum && parsed.score !== undefined) {
-        const resume = window.confirm('Resume your last saved game?');
-        if (resume) {
-          setQuestions(parsed.questions);
-          setQuestionNum(parsed.questionNum);
-          setScore(parsed.score);
-          return;
-        }
+    const loadGame = async () => {
+      if (!state) {
+        navigate('/');
+        return;
       }
-    }
 
-    fetchAllQuestions();
+      try {
+        const res = await fetch('/api/game/load');
+        const saved = await res.json();
+
+        if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
+          const resume = window.confirm('Resume your last saved game?');
+          if (resume) {
+            setQuestions(saved.questions);
+            setQuestionNum(saved.questionNum);
+            setScore(saved.score);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load saved game:', err);
+      }
+
+      fetchAllQuestions();
+    };
+
+    loadGame();
   }, []);
 
-  // Fetch all questions at once; this way if a user needs to save a game and come back later they can 
-  //TODO eventually this function will move to the server side 
   const fetchAllQuestions = async () => {
     const url = `https://opentdb.com/api.php?amount=${totalQuestions}&difficulty=${difficulty}&category=${category}&type=${type}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-    // Decode HTML entities from API
-    // so values like ", &, ', < , > display correctly and not as &amp; etc 
-    const decoded = data.results.map((q: Question) => ({
-      ...q,
-      question: decodeHTML(q.question),
-      correct_answer: decodeHTML(q.correct_answer),
-      incorrect_answers: q.incorrect_answers.map(decodeHTML),
-    }));
+      const decoded = data.results.map((q: Question) => ({
+        ...q,
+        question: decodeHTML(q.question),
+        correct_answer: decodeHTML(q.correct_answer),
+        incorrect_answers: q.incorrect_answers.map(decodeHTML),
+      }));
 
-    setQuestions(decoded);
+      setQuestions(decoded);
+    } catch (err) {
+      console.error('Failed to fetch questions:', err);
+    }
   };
 
-  // adds one point to the score if a user answers correctly 
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
     if (answer === currentQuestion.correct_answer) {
       setScore(prev => prev + 1);
     }
   };
-  const handleNext = () => { // when the question number is going over the number of total questions, the game is over 
+
+  const handleNext = async () => {
     if (questionNum >= totalQuestions) {
       setGameOver(true);
 
-      // Save completed game to high scores
       const gameSummary = {
         score,
         totalQuestions,
@@ -125,57 +117,51 @@ const TriviaGame: React.FC = () => {
         date: new Date().toISOString(),
       };
 
-      //prevScores will be saved as an array
-      //updatedScores will append the previous scores with the current game summary 
-      //the saved game state will be removed from local storage once it is played through
-      //TODO: eventually this should be pulled from the database, not local storage
-      const prevScores = JSON.parse(localStorage.getItem('highScores') || '[]');
-      const updatedScores = [gameSummary, ...prevScores];
-      localStorage.setItem('highScores', JSON.stringify(updatedScores));
-
-      localStorage.removeItem('savedGame');
+      try {
+        await fetch('/api/scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(gameSummary),
+        });
+      } catch (err) {
+        console.error('Failed to save high score:', err);
+      }
     } else {
       setQuestionNum(prev => prev + 1);
       setSelectedAnswer(null);
     }
   };
 
-  // when a game is over and a user wants to play again with the same settings
-  // user will have the same number of questions, category, and difficulty level if they use this button
-  // TO DO: do we need a second button that allows users to go back to the game settings page and update their choices?  If so; this is the code that could be updated: 
-//   <Button variant="secondary" className="mt-3" onClick={handleRestart}>
-//   Play Again (Same Settings)
-//  </Button>
-
-//  <Button variant="outline-primary" className="mt-3 ms-2" onClick={() => navigate('/settings')}>
-//   Change Settings
-//  </Button>
-//TODO eventually this will be stored on the server 
   const handleRestart = () => {
     setScore(0);
     setQuestionNum(1);
     setSelectedAnswer(null);
     setGameOver(false);
     fetchAllQuestions();
-    localStorage.removeItem('savedGame');
   };
-  
-  // handles the game save so a user can come back later 
-  //TODO this will eventually be saved to the server database; not local storage 
-  const handleSave = () => {
+
+  const handleSave = async () => {
     const gameToSave = {
       questions,
       questionNum,
       score,
     };
-    localStorage.setItem('savedGame', JSON.stringify(gameToSave));
-    alert('Game saved! You can resume it later.');
+
+    try {
+      await fetch('/api/game/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gameToSave),
+      });
+      alert('Game saved! You can resume it later.');
+    } catch (err) {
+      console.error('Failed to save game:', err);
+      alert('There was an error saving your game.');
+    }
   };
 
   return (
     <>
-      
-
       <Container className="py-5">
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold">Trivia Time!</h1>
