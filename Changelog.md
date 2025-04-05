@@ -3,8 +3,12 @@ package.json: Added commands for setting up the client side server
 Added nodemon dependency 
 
 server/package.json: updated file; added a dev script, nodemonConfig
-server/tsconfig.json: updated the root directory; prevents an error of server.js MODULE_NOT_FOUND
-moved file to root/tsconfig.json
+
+client/tsconfig.json: added compilerOptions: jsx: react-jsx 
+
+tsconfig.json - moved from server folder to root folder
+added "jsx": "react-jsx"
+
 
 
 ##
