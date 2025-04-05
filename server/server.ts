@@ -9,10 +9,11 @@ dotenv.config();
 import { sequelize } from "./models/index.js";
 import { User } from "./models/user.js";
 import authenticateToken from "./assets/authenticate-token.js";
-import { validDifficulty, validCategory, validDate } from "./assets/utils.js";
+import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "./assets/utils.js";
 
 import gameRoutes from "./routes/game.js";
 import { Settings } from "./models/settings.js";
+import { GameState } from "./models/gamestate.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -133,9 +134,37 @@ app.post("/login", async (req: Request, res: Response) => {
 
 // USER ROUTES
 // For registering a new user
-app.post("/user/register", function(req, res) {
-    req.body; // Gets info from POST request
-    res.send("POST /user/register");
+app.post("/user/register", async function(req, res) {
+    try {
+        const { username, password } = req.body;
+
+        // See if username already exists
+        const user = await User.findOne({ where: { username } });
+        if (user) {
+            return void res.status(400).json({ message: 'Username already exists' });
+        }
+
+        if(!validateUsername(username)) {
+            return void res.status(400).json({
+                 message: "Invalid username. Must be between 6 and 30 characters and only contain alphanumeric characters"
+            });
+        }
+
+        if(!validatePassword(password)) {
+            return void res.status(400).json({
+                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+            });
+        }
+
+        const newUser = await User.create({ username: username, password: password });
+        await Settings.create({ userId: newUser.id })
+        await GameState.create({ userId: newUser.id })
+
+        res.status(200).send("User registration successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Save current game for user
@@ -162,7 +191,7 @@ app.get("/user/:user/scores", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -204,7 +233,7 @@ app.post("/user/:user/scores", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -237,7 +266,7 @@ app.delete("/user/:user/scores", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -262,7 +291,7 @@ app.get("/user/:user/darkmode", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -286,7 +315,7 @@ app.post("/user/:user/darkmode", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -311,7 +340,7 @@ app.get("/user/:user/difficulty", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -339,7 +368,7 @@ app.post("/user/:user/difficulty", async function(req, res) {
             return void res.status(400).json({ message: 'Invalid username' });
         }
         
-        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
         if (!userSettings) {
             return void res.sendStatus(500);
         }
@@ -364,6 +393,12 @@ app.post("/user/:user/changepassword", async function(req, res) {
         
         if (!user) {
             return void res.status(400).json({ message: 'Invalid username' });
+        }
+
+        if(!validatePassword(password)) {
+            return void res.status(400).json({
+                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+            });
         }
 
         user["password"] = password;

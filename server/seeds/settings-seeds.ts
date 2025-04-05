@@ -59,8 +59,8 @@ export const seedSettings = async () => {
   const malloryId = user!.id
 
   await Settings.bulkCreate([
-    { userid: aliceId, difficulty: "medium", darkmode: false, scores: aliceScores },
-    { userid: bobId, difficulty: "hard", darkmode: true, scores: bobScores },
-    { userid: malloryId, difficulty: "easy", darkmode: false, scores: malloryScores },
+    { userId: aliceId, difficulty: "medium", darkmode: false, scores: aliceScores },
+    { userId: bobId, difficulty: "hard", darkmode: true, scores: bobScores },
+    { userId: malloryId, difficulty: "easy", darkmode: false, scores: malloryScores },
   ],);
 };

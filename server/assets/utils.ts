@@ -15,4 +15,14 @@ function validDate(date: string): boolean {
     return regex.test(date);
 }
 
-export { validDifficulty, validCategory, validDate }
+function validateUsername(username: string): boolean {
+    const passwordRegex = /^[A-Za-z0-9]{6,30}$/;
+    return passwordRegex.test(username);
+}
+
+function validatePassword(password: string): boolean {
+    const passwordRegex = /^[A-Za-z0-9!@#$%^&*()\-_=+\[\]{}|;:,.?<>]{6,30}$/;
+    return passwordRegex.test(password);
+}
+
+export { validDifficulty, validCategory, validDate, validateUsername, validatePassword }
