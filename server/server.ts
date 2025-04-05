@@ -7,14 +7,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { sequelize } from "./models/index.js";
-import { User } from "./models/user.js";
 import authenticateToken from "./assets/authenticate-token.js";
-import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "./assets/utils.js";
 
 import gameRoutes, { questions } from "./routes/game.js";
+import userRoutes from "./routes/user.js";
+
+import { User } from "./models/user.js";
 import { Settings } from "./models/settings.js";
 import { GameState } from "./models/gamestate.js";
-import { SavedScore } from "../interfaces/SavedScore.js";
+import { validateUsername, validatePassword } from "./assets/utils.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(gameRoutes);
+app.use(userRoutes);
 
 // LOGIN ROUTES
 app.post("/login", async (req: Request, res: Response) => {
@@ -135,7 +137,7 @@ app.post("/login", async (req: Request, res: Response) => {
 
 // USER ROUTES
 // For registering a new user
-app.post("/user/register", async function(req, res) {
+app.post("/register", async function(req, res) {
     try {
         const { username, password } = req.body;
 
@@ -168,307 +170,307 @@ app.post("/user/register", async function(req, res) {
     }
 })
 
-// Save current game for user
-app.post("/user/:user/game/save", async function(req, res) {
-    try {
-        const username = req.params["user"];
-        const current_question = parseInt(req.body["current_question"]);
-        const score = parseInt(req.body["score"]);
+// // Save current game for user
+// app.post("/user/:user/game/save", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
+//         const current_question = parseInt(req.body["current_question"]);
+//         const score = parseInt(req.body["score"]);
 
-        console.log(current_question, score);
-        console.log(typeof current_question, typeof score);
-        if(!Number.isInteger(current_question) || !Number.isInteger(score)) {
-            return void res.status(400).json({ message: 'Invalid number' });
-        }
+//         console.log(current_question, score);
+//         console.log(typeof current_question, typeof score);
+//         if(!Number.isInteger(current_question) || !Number.isInteger(score)) {
+//             return void res.status(400).json({ message: 'Invalid number' });
+//         }
 
-        if(current_question > questions.length) {
-            return void res.status(400).json({ message: "Current question not in questions"});
-        }
+//         if(current_question > questions.length) {
+//             return void res.status(400).json({ message: "Current question not in questions"});
+//         }
 
-        if(score >= current_question) {
-            return void res.status(400).json({ message: "Score greater than current_quesion"});
-        }
+//         if(score >= current_question) {
+//             return void res.status(400).json({ message: "Score greater than current_quesion"});
+//         }
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
-        if (!userGameState) {
-            return void res.sendStatus(500);
-        }
+//         const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
+//         if (!userGameState) {
+//             return void res.sendStatus(500);
+//         }
 
-        userGameState["questions"] = questions;
-        userGameState["current_question"] = current_question;
-        userGameState["score"] = score;
-        await userGameState.save();
+//         userGameState["questions"] = questions;
+//         userGameState["current_question"] = current_question;
+//         userGameState["score"] = score;
+//         await userGameState.save();
 
-        res.status(200).send("Game save successful");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).send("Game save successful");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Retrieve saved game for user
-app.get("/user/:user/game", async function(req, res) {
-    try {
-        const username = req.params["user"];
+// // Retrieve saved game for user
+// app.get("/user/:user/game", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
-        if (!userGameState) {
-            return void res.sendStatus(500);
-        }
+//         const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
+//         if (!userGameState) {
+//             return void res.sendStatus(500);
+//         }
 
-        res.status(200).json({ 
-            questions: userGameState["questions"], 
-            current_question: userGameState["current_question"], 
-            score: userGameState["score"]
-        });
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).json({ 
+//             questions: userGameState["questions"], 
+//             current_question: userGameState["current_question"], 
+//             score: userGameState["score"]
+//         });
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Return history of scores for user
-app.get("/user/:user/scores", async function(req, res) {
-    try {
-        const username = req.params["user"];
+// // Return history of scores for user
+// app.get("/user/:user/scores", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        res.status(200).send(userSettings["scores"]);
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).send(userSettings["scores"]);
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Add score for user
-app.post("/user/:user/scores", async function(req, res) {
-    try {
-        const username = req.params["user"];
-        const questions = parseInt(req.body["questions"]);
-        const answers = parseInt(req.body["answers"]);
-        const { category, difficulty, date } = req.body;
+// // Add score for user
+// app.post("/user/:user/scores", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
+//         const questions = parseInt(req.body["questions"]);
+//         const answers = parseInt(req.body["answers"]);
+//         const { category, difficulty, date } = req.body;
 
-        if(!Number.isInteger(questions) || !Number.isInteger(answers)) {
-            return void res.status(400).json({ message: 'Invalid number' });
-        }
+//         if(!Number.isInteger(questions) || !Number.isInteger(answers)) {
+//             return void res.status(400).json({ message: 'Invalid number' });
+//         }
 
-        if(!validCategory(category)) {
-            return void res.status(400).json({ message: 'Invalid category' });
-        }
+//         if(!validCategory(category)) {
+//             return void res.status(400).json({ message: 'Invalid category' });
+//         }
 
-        if (!validDifficulty(difficulty)) {
-            return void res.status(400).json({ message: 'Invalid difficulty' });
-        }
+//         if (!validDifficulty(difficulty)) {
+//             return void res.status(400).json({ message: 'Invalid difficulty' });
+//         }
 
-        if (!validDate(date)) {
-            return void res.status(400).json({ message: 'Invalid date' });
-        }
+//         if (!validDate(date)) {
+//             return void res.status(400).json({ message: 'Invalid date' });
+//         }
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        const newScores: SavedScore = {
-            questions: questions,
-            answers: answers,
-            category: category,
-            difficulty: difficulty,
-            date: date
-        }
-        userSettings["scores"].push(newScores);
-        userSettings.changed('scores', true); // Updated array has to be marked to save properly
-        await userSettings.save();
-        res.status(200).send("Score added successfully");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         const newScores: SavedScore = {
+//             questions: questions,
+//             answers: answers,
+//             category: category,
+//             difficulty: difficulty,
+//             date: date
+//         }
+//         userSettings["scores"].push(newScores);
+//         userSettings.changed('scores', true); // Updated array has to be marked to save properly
+//         await userSettings.save();
+//         res.status(200).send("Score added successfully");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Delete history of scores for user
-app.delete("/user/:user/scores", async function(req, res) {
-    try {
-        const username = req.params["user"];
+// // Delete history of scores for user
+// app.delete("/user/:user/scores", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        userSettings["scores"] = [];
-        await userSettings.save();
-        res.status(200).send("Scores deleted");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         userSettings["scores"] = [];
+//         await userSettings.save();
+//         res.status(200).send("Scores deleted");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Return status of light/dark mode
-app.get("/user/:user/darkmode", async function(req, res) {
-    try {
-        const username = req.params["user"];
+// // Return status of light/dark mode
+// app.get("/user/:user/darkmode", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        res.status(200).send(userSettings["darkmode"]);
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).send(userSettings["darkmode"]);
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Set status of light/dark mode
-app.post("/user/:user/darkmode", async function(req, res) {
-    try {
-        const username = req.params["user"];
-        const { darkmode } = req.body;
+// // Set status of light/dark mode
+// app.post("/user/:user/darkmode", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
+//         const { darkmode } = req.body;
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        userSettings["darkmode"] = darkmode;
-        await userSettings.save();
-        res.status(200).send("Darkmode update successful");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         userSettings["darkmode"] = darkmode;
+//         await userSettings.save();
+//         res.status(200).send("Darkmode update successful");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Return preferred difficulty
-app.get("/user/:user/difficulty", async function(req, res) {
-    try {
-        const username = req.params["user"];
+// // Return preferred difficulty
+// app.get("/user/:user/difficulty", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        res.status(200).send(userSettings["difficulty"]);
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).send(userSettings["difficulty"]);
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Set preferred difficulty
-app.post("/user/:user/difficulty", async function(req, res) {
-    try {
-        const username = req.params["user"];
-        const { difficulty } = req.body;
+// // Set preferred difficulty
+// app.post("/user/:user/difficulty", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
+//         const { difficulty } = req.body;
 
-        if (!validDifficulty(difficulty)) {
-            return void res.status(400).json({ message: 'Invalid difficulty' });
-        }
+//         if (!validDifficulty(difficulty)) {
+//             return void res.status(400).json({ message: 'Invalid difficulty' });
+//         }
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
         
-        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
-        if (!userSettings) {
-            return void res.sendStatus(500);
-        }
+//         const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+//         if (!userSettings) {
+//             return void res.sendStatus(500);
+//         }
 
-        userSettings["difficulty"] = difficulty
-        await userSettings.save();
-        res.status(200).send("Difficulty update successful");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         userSettings["difficulty"] = difficulty
+//         await userSettings.save();
+//         res.status(200).send("Difficulty update successful");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
-// Change password for user
-app.post("/user/:user/changepassword", async function(req, res) {
-    try {
-        const username = req.params["user"];
-        const { password } = req.body;
+// // Change password for user
+// app.post("/user/:user/changepassword", async function(req, res) {
+//     try {
+//         const username = req.params["user"];
+//         const { password } = req.body;
 
-        // Find the user by username
-        const user = await User.findOne({ where: { username } });
+//         // Find the user by username
+//         const user = await User.findOne({ where: { username } });
         
-        if (!user) {
-            return void res.status(400).json({ message: 'Invalid username' });
-        }
+//         if (!user) {
+//             return void res.status(400).json({ message: 'Invalid username' });
+//         }
 
-        if(!validatePassword(password)) {
-            return void res.status(400).json({
-                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
-            });
-        }
+//         if(!validatePassword(password)) {
+//             return void res.status(400).json({
+//                  message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+//             });
+//         }
 
-        user["password"] = password;
-        await user.save();
+//         user["password"] = password;
+//         await user.save();
 
-        res.status(200).send("Password change successful");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
+//         res.status(200).send("Password change successful");
+//     } catch (error) {
+//         console.error('Error during password change:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// })
 
 
 // CUSTOM QUESTIONS routes
