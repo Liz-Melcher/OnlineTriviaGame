@@ -24,6 +24,7 @@ function SettingsFactory(sequelize: Sequelize) {
       userid: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
         references: {
           model: User,  // References the User model
           key: 'id',
