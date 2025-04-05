@@ -11,7 +11,7 @@ export interface APIQuestion {
     incorrect_answers: string[]
 }
 
-let questions: ClientQuestion[] = [];
+export let questions: ClientQuestion[] = [];
 
 const router = Router();
 
