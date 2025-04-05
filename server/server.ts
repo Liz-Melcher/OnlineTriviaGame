@@ -14,6 +14,7 @@ import { validDifficulty, validCategory, validDate, validateUsername, validatePa
 import gameRoutes, { questions } from "./routes/game.js";
 import { Settings } from "./models/settings.js";
 import { GameState } from "./models/gamestate.js";
+import { SavedScore } from "../interfaces/SavedScore.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -296,7 +297,7 @@ app.post("/user/:user/scores", async function(req, res) {
             return void res.sendStatus(500);
         }
 
-        const newScores = {
+        const newScores: SavedScore = {
             questions: questions,
             answers: answers,
             category: category,
