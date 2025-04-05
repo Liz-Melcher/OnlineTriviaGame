@@ -1,3 +1,4 @@
+import { User } from '../models/user.js';
 import { Settings } from '../models/settings.js';
 
 const date = new Date();
@@ -50,9 +51,16 @@ const malloryScores = [
 ]
 
 export const seedSettings = async () => {
+  let user = await User.findOne({ where: { username: "alice" } });
+  const aliceId = user!.id
+  user = await User.findOne({ where: { username: "bob" } });
+  const bobId = user!.id
+  user = await User.findOne({ where: { username: "mallory" } });
+  const malloryId = user!.id
+
   await Settings.bulkCreate([
-    { userid: 1, difficulty: "medium", darkmode: false, scores: aliceScores },
-    { userid: 2, difficulty: "hard", darkmode: true, scores: bobScores },
-    { userid: 3, difficulty: "easy", darkmode: false, scores: malloryScores },
+    { userid: aliceId, difficulty: "medium", darkmode: false, scores: aliceScores },
+    { userid: bobId, difficulty: "hard", darkmode: true, scores: bobScores },
+    { userid: malloryId, difficulty: "easy", darkmode: false, scores: malloryScores },
   ],);
 };
