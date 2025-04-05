@@ -12,6 +12,7 @@ import authenticateToken from "./assets/authenticate-token.js";
 import { categories } from "./assets/categories.js";
 
 import gameRoutes from "./routes/game.js";
+import { Settings } from "./models/settings.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -156,10 +157,10 @@ app.get("/user/:user/scores", function(req, res) {
     res.send("GET /user/:user/scores");
 })
 
-// Delete history of scores for user
-app.put("/user/:user/scores", function(req, res) {
+// Add score for user
+app.post("/user/:user/scores", function(req, res) {
     req.params; // Gets username
-    res.send("PUT /user/:user/scores");
+    res.send("POST /user/:user/scores");
 })
 
 // Delete history of scores for user
@@ -169,29 +170,106 @@ app.delete("/user/:user/scores", function(req, res) {
 })
 
 // Return status of light/dark mode
-app.get("/user/:user/lightdarkmode", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/lightdarkmode");
+app.get("/user/:user/darkmode", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        if (!userSettings) {
+          return void res.sendStatus(500);
+        }
+
+        res.status(200).send(userSettings["darkmode"]);
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Set status of light/dark mode
-app.post("/user/:user/lightdarkmode", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets "light" or "dark"
-    res.send("POST /user/:user/lightdarkmode");
+app.post("/user/:user/darkmode", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { darkmode } = req.body;
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        if (!userSettings) {
+          return void res.sendStatus(500);
+        }
+
+        userSettings["darkmode"] = darkmode;
+        await userSettings.save();
+        res.status(200).send("Darkmode update successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Return preferred difficulty
-app.get("/user/:user/difficulty", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/difficulty");
+app.get("/user/:user/difficulty", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        if (!userSettings) {
+          return void res.sendStatus(500);
+        }
+
+        res.status(200).send(userSettings["difficulty"]);
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Set preferred difficulty
-app.post("/user/:user/difficulty", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets difficulty
-    res.send("POST /user/:user/difficulty");
+app.post("/user/:user/difficulty", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { difficulty } = req.body;
+
+        const difficulties = ['easy', 'medium', 'hard'];
+        if (!difficulties.includes(difficulty)) {
+            return void res.status(400).json({ message: 'Invalid difficulty' });
+        }
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userid: user["id"] }});
+        if (!userSettings) {
+          return void res.sendStatus(500);
+        }
+
+        userSettings["difficulty"] = difficulty
+        await userSettings.save();
+        res.status(200).send("Difficulty update successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Change password for user
