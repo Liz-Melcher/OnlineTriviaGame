@@ -11,7 +11,7 @@ import { User } from "./models/user.js";
 import authenticateToken from "./assets/authenticate-token.js";
 import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "./assets/utils.js";
 
-import gameRoutes from "./routes/game.js";
+import gameRoutes, { questions } from "./routes/game.js";
 import { Settings } from "./models/settings.js";
 import { GameState } from "./models/gamestate.js";
 
@@ -168,16 +168,74 @@ app.post("/user/register", async function(req, res) {
 })
 
 // Save current game for user
-app.post("/user/:user/game/save", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets current game info such as all game questions and answers, current question number, and current score
-    res.send("POST /user/:user/game/save");
+app.post("/user/:user/game/save", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const current_question = parseInt(req.body["current_question"]);
+        const score = parseInt(req.body["score"]);
+
+        console.log(current_question, score);
+        console.log(typeof current_question, typeof score);
+        if(!Number.isInteger(current_question) || !Number.isInteger(score)) {
+            return void res.status(400).json({ message: 'Invalid number' });
+        }
+
+        if(current_question > questions.length) {
+            return void res.status(400).json({ message: "Current question not in questions"});
+        }
+
+        if(score >= current_question) {
+            return void res.status(400).json({ message: "Score greater than current_quesion"});
+        }
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
+        if (!userGameState) {
+            return void res.sendStatus(500);
+        }
+
+        userGameState["questions"] = questions;
+        userGameState["current_question"] = current_question;
+        userGameState["score"] = score;
+        await userGameState.save();
+
+        res.status(200).send("Game save successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Retrieve saved game for user
-app.get("/user/:user/game", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/game");
+app.get("/user/:user/game", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userGameState = await GameState.findOne({ where: { userId: user["id"] }});
+        if (!userGameState) {
+            return void res.sendStatus(500);
+        }
+
+        res.status(200).json({ 
+            questions: userGameState["questions"], 
+            current_question: userGameState["current_question"], 
+            score: userGameState["score"]
+        });
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Return history of scores for user
