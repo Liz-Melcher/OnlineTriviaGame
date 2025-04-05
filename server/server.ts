@@ -156,6 +156,18 @@ app.get("/user/:user/scores", function(req, res) {
     res.send("GET /user/:user/scores");
 })
 
+// Delete history of scores for user
+app.put("/user/:user/scores", function(req, res) {
+    req.params; // Gets username
+    res.send("PUT /user/:user/scores");
+})
+
+// Delete history of scores for user
+app.delete("/user/:user/scores", function(req, res) {
+    req.params; // Gets username
+    res.send("DELETE /user/:user/scores");
+})
+
 // Return status of light/dark mode
 app.get("/user/:user/lightdarkmode", function(req, res) {
     req.params; // Gets username
@@ -182,17 +194,27 @@ app.post("/user/:user/difficulty", function(req, res) {
     res.send("POST /user/:user/difficulty");
 })
 
-// Delete history of scores for user
-app.delete("/user/:user/scores", function(req, res) {
-    req.params; // Gets username
-    res.send("DELETE /user/:user/game");
-})
-
 // Change password for user
-app.post("/user/:user/changepassword", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets passwords
-    res.send("POST /user/:user/passwordreset");
+app.post("/user/:user/changepassword", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { password } = req.body;
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        
+        if (!user) {
+          return void res.status(400).json({ message: 'Invalid username' });
+        }
+
+        user["password"] = password;
+        await user.save();
+
+        res.status(200).send("Password change successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 
