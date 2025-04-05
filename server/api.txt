@@ -20,7 +20,35 @@ GET Route: "/game"
   Example: "http://localhost:3001/game?amount=20&category=Mythology&difficulty=medium"
 
 GET Route: "/game/:questionId"
-  This route retrieves a quesion number from a stored game.
+  This route retrieves a question number from a stored game.
   Route Parameters:
     ":questionId": Question number to retrieve.
   Example: "http://localhost:3001/game/5"
+
+GET Route: "/user/:user/darkmode"
+  This route retrieves a boolean indicating whether the user prefers dark mode or not.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/darkmode"
+
+POST Route: "/user/:user/darkmode"
+  This route sets a boolean indicating whether the user prefers dark mode or not.
+  Route Parameters:
+    ":user": username
+  Body Parameter:
+    "darkmode": true || false
+  Example: "http://localhost:3001/user/alice/darkmode"
+
+GET Route: "/user/:user/difficulty"
+  This route retrieves the preferred difficulty of the user.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/difficulty"
+
+POST Route: "/user/:user/difficulty"
+  This route sets the preferred difficulty of the user.
+  Route Parameters:
+    ":user": username
+  Body Parameter:
+    "difficulty": "easy" || "medium" || "hard"
+  Example: "http://localhost:3001/user/alice/difficulty"

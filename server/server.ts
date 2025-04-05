@@ -9,9 +9,11 @@ dotenv.config();
 import { sequelize } from "./models/index.js";
 import { User } from "./models/user.js";
 import authenticateToken from "./assets/authenticate-token.js";
-import { categories } from "./assets/categories.js";
+import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "./assets/utils.js";
 
 import gameRoutes from "./routes/game.js";
+import { Settings } from "./models/settings.js";
+import { GameState } from "./models/gamestate.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -31,14 +33,14 @@ app.post("/login", async (req: Request, res: Response) => {
         const user = await User.findOne({ where: { username } });
         
         if (!user) {
-          return void res.status(400).json({ message: 'Invalid username or password' });
+            return void res.status(400).json({ message: 'Invalid username or password' });
         }
 
         // Compare the provided password with the stored hashed password
         const isPasswordValid = await bcrypt.compare(password, user.password);
     
         if (!isPasswordValid) {
-          return void res.status(400).json({ message: 'Invalid username or password' });
+            return void res.status(400).json({ message: 'Invalid username or password' });
         }
     
         // Password is valid, respond with JWT token
@@ -132,9 +134,37 @@ app.post("/login", async (req: Request, res: Response) => {
 
 // USER ROUTES
 // For registering a new user
-app.post("/user/register", function(req, res) {
-    req.body; // Gets info from POST request
-    res.send("POST /user/register");
+app.post("/user/register", async function(req, res) {
+    try {
+        const { username, password } = req.body;
+
+        // See if username already exists
+        const user = await User.findOne({ where: { username } });
+        if (user) {
+            return void res.status(400).json({ message: 'Username already exists' });
+        }
+
+        if(!validateUsername(username)) {
+            return void res.status(400).json({
+                 message: "Invalid username. Must be between 6 and 30 characters and only contain alphanumeric characters"
+            });
+        }
+
+        if(!validatePassword(password)) {
+            return void res.status(400).json({
+                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+            });
+        }
+
+        const newUser = await User.create({ username: username, password: password });
+        await Settings.create({ userId: newUser.id })
+        await GameState.create({ userId: newUser.id })
+
+        res.status(200).send("User registration successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Save current game for user
@@ -151,48 +181,234 @@ app.get("/user/:user/game", function(req, res) {
 })
 
 // Return history of scores for user
-app.get("/user/:user/scores", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/scores");
+app.get("/user/:user/scores", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        res.status(200).send(userSettings["scores"]);
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
-// Return status of light/dark mode
-app.get("/user/:user/lightdarkmode", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/lightdarkmode");
-})
+// Add score for user
+app.post("/user/:user/scores", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const questions = parseInt(req.body["questions"]);
+        const answers = parseInt(req.body["answers"]);
+        const { category, difficulty, date } = req.body;
 
-// Set status of light/dark mode
-app.post("/user/:user/lightdarkmode", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets "light" or "dark"
-    res.send("POST /user/:user/lightdarkmode");
-})
+        if(!Number.isInteger(questions) || !Number.isInteger(answers)) {
+            return void res.status(400).json({ message: 'Invalid number' });
+        }
 
-// Return preferred difficulty
-app.get("/user/:user/difficulty", function(req, res) {
-    req.params; // Gets username
-    res.send("GET /user/:user/difficulty");
-})
+        if(!validCategory(category)) {
+            return void res.status(400).json({ message: 'Invalid category' });
+        }
 
-// Set preferred difficulty
-app.post("/user/:user/difficulty", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets difficulty
-    res.send("POST /user/:user/difficulty");
+        if (!validDifficulty(difficulty)) {
+            return void res.status(400).json({ message: 'Invalid difficulty' });
+        }
+
+        if (!validDate(date)) {
+            return void res.status(400).json({ message: 'Invalid date' });
+        }
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        const newScores = {
+            questions: questions,
+            answers: answers,
+            category: category,
+            difficulty: difficulty,
+            date: date
+        }
+        userSettings["scores"].push(newScores);
+        userSettings.changed('scores', true); // Updated array has to be marked to save properly
+        await userSettings.save();
+        res.status(200).send("Score added successfully");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Delete history of scores for user
-app.delete("/user/:user/scores", function(req, res) {
-    req.params; // Gets username
-    res.send("DELETE /user/:user/game");
+app.delete("/user/:user/scores", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        userSettings["scores"] = [];
+        await userSettings.save();
+        res.status(200).send("Scores deleted");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+// Return status of light/dark mode
+app.get("/user/:user/darkmode", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        res.status(200).send(userSettings["darkmode"]);
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+// Set status of light/dark mode
+app.post("/user/:user/darkmode", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { darkmode } = req.body;
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        userSettings["darkmode"] = darkmode;
+        await userSettings.save();
+        res.status(200).send("Darkmode update successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+// Return preferred difficulty
+app.get("/user/:user/difficulty", async function(req, res) {
+    try {
+        const username = req.params["user"];
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        res.status(200).send(userSettings["difficulty"]);
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+// Set preferred difficulty
+app.post("/user/:user/difficulty", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { difficulty } = req.body;
+
+        if (!validDifficulty(difficulty)) {
+            return void res.status(400).json({ message: 'Invalid difficulty' });
+        }
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+        
+        const userSettings = await Settings.findOne({ where: { userId: user["id"] }});
+        if (!userSettings) {
+            return void res.sendStatus(500);
+        }
+
+        userSettings["difficulty"] = difficulty
+        await userSettings.save();
+        res.status(200).send("Difficulty update successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 // Change password for user
-app.post("/user/:user/changepassword", function(req, res) {
-    req.params; // Gets username
-    req.body; // Gets passwords
-    res.send("POST /user/:user/passwordreset");
+app.post("/user/:user/changepassword", async function(req, res) {
+    try {
+        const username = req.params["user"];
+        const { password } = req.body;
+
+        // Find the user by username
+        const user = await User.findOne({ where: { username } });
+        
+        if (!user) {
+            return void res.status(400).json({ message: 'Invalid username' });
+        }
+
+        if(!validatePassword(password)) {
+            return void res.status(400).json({
+                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+            });
+        }
+
+        user["password"] = password;
+        await user.save();
+
+        res.status(200).send("Password change successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 })
 
 

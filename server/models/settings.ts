@@ -21,9 +21,10 @@ function SettingsFactory(sequelize: Sequelize) {
         autoIncrement: true,
         allowNull: false,
       },
-      userid: {
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
         references: {
           model: User,  // References the User model
           key: 'id',
@@ -33,6 +34,7 @@ function SettingsFactory(sequelize: Sequelize) {
       difficulty: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: "medium"
       },
       scores: { 
         type: DataTypes.ARRAY(DataTypes.JSONB),  // Stores an array of JSON objects
