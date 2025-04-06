@@ -1,41 +1,102 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Setting = () => {
-  const toggleDarkMode = () => {
-    const currentMode = document.body.classList.contains('light') ? 'light' : 'dark';
-    const newMode = currentMode === 'light' ? 'dark' : 'light';
-    document.body.classList.remove(currentMode);
-    document.body.classList.add(newMode);
-    localStorage.setItem('theme', newMode);
-  };
+  const [darkMode, setDarkMode] = useState(false);
+  const [difficulty, setDifficulty] = useState('easy');
 
-  const applySavedTheme = () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.classList.remove('light', 'dark'); // Remove conflicting classes
-    document.body.classList.add(savedTheme); // Apply saved theme
-  };
+  const toggleDarkMode = async () => {
+    try {
+      const newMode = !darkMode;
+      await fetch('/user/me/darkmode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+        },
+        body: JSON.stringify({ darkmode: newMode }),
+      });
 
-  useEffect(() => {
-    applySavedTheme(); // Apply theme on page load
-  }, []);
-
-  const handleClearScore = () => {
-    localStorage.removeItem('highScores');
-    alert('Scores cleared successfully!');
-  };
-
-  const handleChangePassword = () => {
-    const newPassword = prompt('Enter your new password:');
-    if (newPassword) {
-      alert('Password changed successfully!');
+      setDarkMode(newMode);
+    } catch (error) {
+      console.error('Error toggling dark mode:', error);
     }
   };
 
-  const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const difficulty = e.target.value;
-    localStorage.setItem('preferredDifficulty', difficulty);
-    alert(`Preferred difficulty set to ${difficulty}`);
+  const handleClearScore = async () => {
+    try {
+      await fetch('/user/me/scores', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+      });
+
+      alert('Scores cleared successfully!');
+    } catch (error) {
+      console.error('Error clearing scores:', error);
+    }
   };
+
+  const handleChangePassword = async () => {
+    const newPassword = prompt('Enter your new password:');
+    if (newPassword) {
+      try {
+        await fetch('/user/me/changepassword', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+          },
+          body: JSON.stringify({ password: newPassword }),
+        });
+
+        alert('Password changed successfully!');
+      } catch (error) {
+        console.error('Error changing password:', error);
+      }
+    }
+  };
+
+  const handleDifficultyChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newDifficulty = e.target.value;
+    try {
+      await fetch('/user/me/difficulty', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+        },
+        body: JSON.stringify({ difficulty: newDifficulty }),
+      });
+
+      setDifficulty(newDifficulty);
+      alert(`Preferred difficulty set to ${newDifficulty}`);
+    } catch (error) {
+      console.error('Error setting difficulty:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const darkModeRes = await fetch('/user/me/darkmode', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        });
+        const difficultyRes = await fetch('/user/me/difficulty', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        });
+
+        if (darkModeRes.ok) {
+          setDarkMode(await darkModeRes.json());
+        }
+        if (difficultyRes.ok) {
+          setDifficulty(await difficultyRes.json());
+        }
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   return (
     <section className="container-fluid text-center p-3">
@@ -67,6 +128,7 @@ const Setting = () => {
               className="form-select shadow-sm"
               aria-label="Select Difficulty"
               onChange={handleDifficultyChange}
+              value={difficulty}
             >
               <option value="easy">Easy</option>
               <option value="medium">Medium</option>
