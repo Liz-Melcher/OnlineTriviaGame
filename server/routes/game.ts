@@ -50,6 +50,7 @@ router.get("/", async function(req: Request, res: Response) {
         }
     } catch(error: any) {
         console.error(error.message);
+        res.status(500).json({ message: 'Internal server error' });
     }
 })
 
@@ -64,8 +65,12 @@ router.get("/:questionId", function(req: Request, res: Response) {
         return void res.status(400).send("No game loaded yet. Try /game first.")
     }
 
-    const questionId = req.params["questionId"];
-    const question = questions[Number(questionId)];
+    const questionId = parseInt(req.params["questionId"]);
+    if(!Number.isInteger(questionId)) {
+        return void res.status(400).json({ message: 'Invalid questionId' });
+    }
+
+    const question = questions[questionId];
     if (!question) {
         return void res.status(400).send(`${questionId} is not a valid question number`);
     }
