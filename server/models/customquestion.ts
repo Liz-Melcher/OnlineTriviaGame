@@ -27,8 +27,8 @@ function CustomQuestionFactory(sequelize: Sequelize) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      incorrect_answer: {
-        type: DataTypes.STRING,
+      incorrect_answers: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
     },
