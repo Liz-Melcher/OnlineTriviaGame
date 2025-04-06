@@ -16,7 +16,7 @@ export let questions: ClientQuestion[] = [];
 const router = Router();
 
 // GAME ROUTES
-router.get("/game", async function(req: Request, res: Response) {
+router.get("/", async function(req: Request, res: Response) {
     try {
         const amount = req.query['amount'];
         const categoryName = req.query['category'];
@@ -54,12 +54,12 @@ router.get("/game", async function(req: Request, res: Response) {
 })
 
 // Gets trivia questions from Custom Question table. Stores them into an array.
-// router.get("/game/custom", function(req, res) {
+// router.get("/custom", function(req, res) {
 //     req.query; // The game parameters from the GET request
 //     res.send("GET /trivia/custom");
 // })
 
-router.get("/game/:questionId", function(req: Request, res: Response) {
+router.get("/:questionId", function(req: Request, res: Response) {
     if(questions.length === 0){
         return void res.status(400).send("No game loaded yet. Try /game first.")
     }

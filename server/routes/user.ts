@@ -8,8 +8,16 @@ import { SavedScore } from "../../interfaces/SavedScore.js";
 
 const router = Router();
 
+router.use("/:user",function (req: Request, res: Response, next) {
+    const username = req.params["user"];
+    if (username !== req.username) {
+        return void res.status(403).json({ message: "Forbidden: User mismatch in route and token" });
+    }
+    next();
+})
+
 // Save current game for user
-router.post("/user/:user/game/save", async function(req: Request, res: Response) {
+router.post("/:user/game/save", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
         const current_question = parseInt(req.body["current_question"]);
@@ -53,7 +61,7 @@ router.post("/user/:user/game/save", async function(req: Request, res: Response)
 })
 
 // Retrieve saved game for user
-router.get("/user/:user/game", async function(req: Request, res: Response) {
+router.get("/:user/game", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
 
@@ -80,7 +88,7 @@ router.get("/user/:user/game", async function(req: Request, res: Response) {
 })
 
 // Return history of scores for user
-router.get("/user/:user/scores", async function(req: Request, res: Response) {
+router.get("/:user/scores", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
 
@@ -103,7 +111,7 @@ router.get("/user/:user/scores", async function(req: Request, res: Response) {
 })
 
 // Add score for user
-router.post("/user/:user/scores", async function(req: Request, res: Response) {
+router.post("/:user/scores", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
         const questions = parseInt(req.body["questions"]);
@@ -155,7 +163,7 @@ router.post("/user/:user/scores", async function(req: Request, res: Response) {
 })
 
 // Delete history of scores for user
-router.delete("/user/:user/scores", async function(req: Request, res: Response) {
+router.delete("/:user/scores", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
 
@@ -180,7 +188,7 @@ router.delete("/user/:user/scores", async function(req: Request, res: Response) 
 })
 
 // Return status of light/dark mode
-router.get("/user/:user/darkmode", async function(req: Request, res: Response) {
+router.get("/:user/darkmode", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
 
@@ -203,7 +211,7 @@ router.get("/user/:user/darkmode", async function(req: Request, res: Response) {
 })
 
 // Set status of light/dark mode
-router.post("/user/:user/darkmode", async function(req: Request, res: Response) {
+router.post("/:user/darkmode", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
         const { darkmode } = req.body;
@@ -229,7 +237,7 @@ router.post("/user/:user/darkmode", async function(req: Request, res: Response) 
 })
 
 // Return preferred difficulty
-router.get("/user/:user/difficulty", async function(req: Request, res: Response) {
+router.get("/:user/difficulty", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
 
@@ -252,7 +260,7 @@ router.get("/user/:user/difficulty", async function(req: Request, res: Response)
 })
 
 // Set preferred difficulty
-router.post("/user/:user/difficulty", async function(req: Request, res: Response) {
+router.post("/:user/difficulty", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
         const { difficulty } = req.body;
@@ -282,7 +290,7 @@ router.post("/user/:user/difficulty", async function(req: Request, res: Response
 })
 
 // Change password for user
-router.post("/user/:user/changepassword", async function(req: Request, res: Response) {
+router.post("/:user/changepassword", async function(req: Request, res: Response) {
     try {
         const username = req.params["user"];
         const { password } = req.body;
