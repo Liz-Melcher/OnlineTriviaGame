@@ -7,7 +7,7 @@ class CustomQuestion extends Model {
   declare id: number;
   declare question: string;
   declare correct_answer: string;
-  declare incorrect_answer: string[];
+  declare incorrect_answers: string[];
 }
 
 function CustomQuestionFactory(sequelize: Sequelize) {

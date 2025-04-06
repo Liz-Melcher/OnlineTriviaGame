@@ -5,7 +5,7 @@ import { CustomQuestion } from '../models/customquestion.js';
 
 const customQuestions = [
     {
-        question: "When was the World Wide Web opened to the public",
+        question: "When was the World Wide Web opened to the public?",
         correct_answer: "1993",
         incorrect_answers: [
             "1995",
@@ -29,7 +29,7 @@ const customQuestions = [
             "Developing the first programming language for the internet"
         ]
     }, {
-        question: "Who was Steve Wozniak's most famous business partner?",
+        question: "Who was Steve Wozniak's famous business partner?",
         correct_answer: "Steve Jobs",
         incorrect_answers: [
             "Bill Gates",

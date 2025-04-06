@@ -11,6 +11,7 @@ import authenticateToken from "./assets/authenticate-token.js";
 
 import gameRoutes from "./routes/game.js";
 import userRoutes from "./routes/user.js";
+import customQuestionsRoute from "./routes/customquestions.js";
 
 import { User } from "./models/user.js";
 import { Settings } from "./models/settings.js";
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/game", authenticateToken, gameRoutes);
 app.use("/user", authenticateToken, userRoutes);
+app.use("/customquestions", authenticateToken, customQuestionsRoute);
 
 // LOGIN ROUTES
 app.post("/login", async (req: Request, res: Response) => {
@@ -54,6 +56,40 @@ app.post("/login", async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+// For registering a new user
+app.post("/register", async function(req, res) {
+    try {
+        const { username, password } = req.body;
+
+        // See if username already exists
+        const user = await User.findOne({ where: { username } });
+        if (user) {
+            return void res.status(400).json({ message: 'Username already exists' });
+        }
+
+        if(!validateUsername(username)) {
+            return void res.status(400).json({
+                 message: "Invalid username. Must be between 6 and 30 characters and only contain alphanumeric characters"
+            });
+        }
+
+        if(!validatePassword(password)) {
+            return void res.status(400).json({
+                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
+            });
+        }
+
+        const newUser = await User.create({ username: username, password: password });
+        await Settings.create({ userId: newUser.id })
+        await GameState.create({ userId: newUser.id })
+
+        res.status(200).send("User registration successful");
+    } catch (error) {
+        console.error('Error during password change:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
 
 // Logout will be handled client side by destroying the JWT token
 // app.post("/logout", function(_req, res) {
@@ -136,39 +172,6 @@ app.post("/login", async (req: Request, res: Response) => {
 
 
 // USER ROUTES
-// For registering a new user
-app.post("/register", async function(req, res) {
-    try {
-        const { username, password } = req.body;
-
-        // See if username already exists
-        const user = await User.findOne({ where: { username } });
-        if (user) {
-            return void res.status(400).json({ message: 'Username already exists' });
-        }
-
-        if(!validateUsername(username)) {
-            return void res.status(400).json({
-                 message: "Invalid username. Must be between 6 and 30 characters and only contain alphanumeric characters"
-            });
-        }
-
-        if(!validatePassword(password)) {
-            return void res.status(400).json({
-                 message: "Invalid password. Must be between 6 and 30 characters and only contain alphanumeric characters and !@#$%^&*()\-_=+\[\]{}|;:,.?<>]"
-            });
-        }
-
-        const newUser = await User.create({ username: username, password: password });
-        await Settings.create({ userId: newUser.id })
-        await GameState.create({ userId: newUser.id })
-
-        res.status(200).send("User registration successful");
-    } catch (error) {
-        console.error('Error during password change:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-})
 
 // // Save current game for user
 // app.post("/user/:user/game/save", async function(req, res) {
@@ -474,19 +477,19 @@ app.post("/register", async function(req, res) {
 
 
 // CUSTOM QUESTIONS routes
-app.get("/customquestions", function(_req, res) {
-    res.send("GET /customquestions")
-})
+// app.get("/customquestions", function(_req, res) {
+//     res.send("GET /customquestions")
+// })
 
-app.post("/customquestions/add", function(req, res) {
-    req.body; // Gets custom question and answers
-    res.send("POST /customquestion/add");
-})
+// app.post("/customquestions/add", function(req, res) {
+//     req.body; // Gets custom question and answers
+//     res.send("POST /customquestion/add");
+// })
 
-app.delete("/customquestions/delete/:questionId", function(req, res) {
-    req.params; // Gets questionId
-    res.send("DELETE /customquestion/delete/:questionId");
-})
+// app.delete("/customquestions/delete/:questionId", function(req, res) {
+//     req.params; // Gets questionId
+//     res.send("DELETE /customquestion/delete/:questionId");
+// })
 
 // Create models in database
 sequelize.sync({ force: false, logging: false }).then(() => console.log("All models synced succssfully"))
