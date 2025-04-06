@@ -100,3 +100,19 @@ POST Route: "/user/:user/game/save"
     "current_question": number of current_question
     "score": score so far
   Example: "http://localhost:3001/user/alice/game"
+
+GET Route: "/customquestions"
+  Get all custom made questions.
+
+POST Route: "/customquestions/add"
+  Add a custom question.
+  Body Parameters:
+    "question": question to ask
+    "correct_answer:" the correct answer
+    "incorrect_answers": an array of the incorrect answers
+
+DELETE Route: "/customquestions/delete/:questionId"
+  Delete a custom question.
+  Route Parameters:
+    ":questionId": ID of question to delete.
+  Example: "http://localhost:3001/customquestions/delete/3"

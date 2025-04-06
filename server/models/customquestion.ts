@@ -7,7 +7,7 @@ class CustomQuestion extends Model {
   declare id: number;
   declare question: string;
   declare correct_answer: string;
-  declare incorrect_answer: string[];
+  declare incorrect_answers: string[];
 }
 
 function CustomQuestionFactory(sequelize: Sequelize) {
@@ -27,8 +27,8 @@ function CustomQuestionFactory(sequelize: Sequelize) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      incorrect_answer: {
-        type: DataTypes.STRING,
+      incorrect_answers: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
     },
