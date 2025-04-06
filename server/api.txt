@@ -5,8 +5,17 @@ To start server, use "npm run start". To seed the DB, first run "npm run seed".
 
 Default host is "localhost" and default port is 3001.
 
+To use routes beginning with "/game" or "/user", a JWT token must first be retrieved by logging in, adn that token
+must be added to an "Authorization" header in the HTTP request with a value of "Bearer {token}".
+
 POST Route: "/login"
   Verifies the username and password exists on the server DB and returns an object with a JWT token if successful.
+  Body parameters:
+    "username"
+    "password"
+
+POST Ruote: "/register"
+  Registers a new user.
   Body parameters:
     "username"
     "password"

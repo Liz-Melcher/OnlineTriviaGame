@@ -9,7 +9,7 @@ dotenv.config();
 import { sequelize } from "./models/index.js";
 import authenticateToken from "./assets/authenticate-token.js";
 
-import gameRoutes, { questions } from "./routes/game.js";
+import gameRoutes from "./routes/game.js";
 import userRoutes from "./routes/user.js";
 
 import { User } from "./models/user.js";
@@ -24,8 +24,8 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(gameRoutes);
-app.use(userRoutes);
+app.use("/game", authenticateToken, gameRoutes);
+app.use("/user", authenticateToken, userRoutes);
 
 // LOGIN ROUTES
 app.post("/login", async (req: Request, res: Response) => {
