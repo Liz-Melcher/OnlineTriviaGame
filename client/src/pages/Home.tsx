@@ -1,7 +1,28 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [hasSavedGame, setHasSavedGame] = useState(false);
+
+  useEffect(() => {
+    const checkSavedGame = async () => {
+      try {
+        const response = await fetch('/user/me/game', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setHasSavedGame(!!data.questions);
+        }
+      } catch (error) {
+        console.error('Error checking saved game:', error);
+      }
+    };
+
+    checkSavedGame();
+  }, []);
 
   return (
     <section className="container-fluid text-center p-3">
@@ -15,7 +36,7 @@ const Home = () => {
           <button
             type="button"
             className="btn btn-primary w-100 mb-2 shadow-sm"
-            onClick={() => navigate('/settings')} // Corrected path
+            onClick={() => navigate('/settings')}
           >
             Play a new Game
           </button>
@@ -23,6 +44,7 @@ const Home = () => {
             type="button"
             className="btn btn-primary w-100 mb-2 shadow-sm"
             onClick={() => navigate('/quiz')}
+            disabled={!hasSavedGame}
           >
             Continue existing Game
           </button>

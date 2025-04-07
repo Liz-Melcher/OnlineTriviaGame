@@ -18,21 +18,41 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      if (isLogin) {
-        const savedUser = JSON.parse(localStorage.getItem('user') || '{}');
-        if (savedUser.username === username && savedUser.password === password) {
+      try {
+        if (isLogin) {
+          const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Invalid username or password');
+          }
+
+          const data = await response.json();
+          localStorage.setItem('id_token', data.token);
           localStorage.setItem('isLoggedIn', 'true');
           navigate('/home');
         } else {
-          alert('Invalid username or password');
+          const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Signup failed');
+          }
+
+          alert('Signup successful!');
+          setIsLogin(true);
         }
-      } else {
-        localStorage.setItem('user', JSON.stringify({ username, password }));
-        alert('Signup successful!');
-        setIsLogin(true);
+      } catch (error) {
+        alert(error.message);
       }
     }
   };

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run client:build && npm run server",
     "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
@@ -15,6 +16,10 @@
     "build": "cd client && npm run build",
     "seed": "cd server && npm run seed",
     "render-build": "npm install && npm run build"
+=======
+      "server": "cd server && npm run build && node dist/server/seeds/index.js && node dist/server/server.js",
+      "server:no-seed": "cd server && npm run start"
+>>>>>>> origin/main
   },
   "keywords": [],
   "author": "",

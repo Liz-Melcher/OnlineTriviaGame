@@ -5,14 +5,23 @@ To start server, use "npm run start". To seed the DB, first run "npm run seed".
 
 Default host is "localhost" and default port is 3001.
 
+To use routes beginning with "/game" or "/user", a JWT token must first be retrieved by logging in, adn that token
+must be added to an "Authorization" header in the HTTP request with a value of "Bearer {token}".
+
 POST Route: "/login"
-  This route verifies the username and password exists on the server DB and returns an object with a JWT token if successful.
+  Verifies the username and password exists on the server DB and returns an object with a JWT token if successful.
+  Body parameters:
+    "username"
+    "password"
+
+POST Ruote: "/register"
+  Registers a new user.
   Body parameters:
     "username"
     "password"
 
 GET Route: "/game"
-  This route retrieves a series of questions from the Open Trivia Database API and stores them on the server.
+  Retrieves a series of questions from the Open Trivia Database API and stores them on the server.
   Query parameters: 
     "amount": number of questions
     "category": name of category (use the exact name from the Category drop down at https://opentdb.com/api_config.php)
@@ -20,7 +29,90 @@ GET Route: "/game"
   Example: "http://localhost:3001/game?amount=20&category=Mythology&difficulty=medium"
 
 GET Route: "/game/:questionId"
-  This route retrieves a quesion number from a stored game.
+  Retrieves a question number from a stored game.
   Route Parameters:
     ":questionId": Question number to retrieve.
   Example: "http://localhost:3001/game/5"
+
+GET Route: "/user/:user/darkmode"
+  Retrieves a boolean indicating whether the user prefers dark mode or not.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/darkmode"
+
+POST Route: "/user/:user/darkmode"
+  Sets a boolean indicating whether the user prefers dark mode or not.
+  Route Parameters:
+    ":user": username
+  Body Parameter:
+    "darkmode": true || false
+  Example: "http://localhost:3001/user/alice/darkmode"
+
+GET Route: "/user/:user/difficulty"
+  Retrieves the preferred difficulty of the user.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/difficulty"
+
+POST Route: "/user/:user/difficulty"
+  Sets the preferred difficulty of the user.
+  Route Parameters:
+    ":user": username
+  Body Parameter:
+    "difficulty": "easy" || "medium" || "hard"
+  Example: "http://localhost:3001/user/alice/difficulty"
+
+GET Route: "/user/:user/score"
+  Gets the history of user scores in an array of SavedScore types.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/score"
+
+POST Route: "/user/:user/score"
+  Adds a saved score for the user.
+  Route Parameters:
+    ":user": username
+  Body Parameters:
+    "questions": number of questions
+    "answers": number of correct answers
+    "category": category of game
+    "difficulty": difficulty of game
+    "date": date game took place. Must be in format "YYYY-MM-DD"
+  Example: "http://localhost:3001/user/alice/score"
+
+DEL Route: "/user/:user/score"
+  Deletes the saved scores for the user.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/score"
+
+GET Route: "/user/:user/game"
+  Gets the saved game for the user.
+  Route Parameters:
+    ":user": username
+  Example: "http://localhost:3001/user/alice/game"
+
+POST Route: "/user/:user/game/save"
+  Saves the current game for the user. Note that the current game is already on the server.
+  Route Parameters:
+    ":user": username
+  Body Parameters:
+    "current_question": number of current_question
+    "score": score so far
+  Example: "http://localhost:3001/user/alice/game"
+
+GET Route: "/customquestions"
+  Get all custom made questions.
+
+POST Route: "/customquestions/add"
+  Add a custom question.
+  Body Parameters:
+    "question": question to ask
+    "correct_answer:" the correct answer
+    "incorrect_answers": an array of the incorrect answers
+
+DELETE Route: "/customquestions/delete/:questionId"
+  Delete a custom question.
+  Route Parameters:
+    ":questionId": ID of question to delete.
+  Example: "http://localhost:3001/customquestions/delete/3"

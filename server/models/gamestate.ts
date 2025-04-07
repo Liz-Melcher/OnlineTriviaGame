@@ -31,16 +31,18 @@ function GameStateFactory(sequelize: Sequelize) {
       },
       questions: {
         type: DataTypes.JSONB,  // Stores an array of JSON objects
-        allowNull: false
+        allowNull: true,
+        defaultValue: null
       },
       current_question: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true,
+        defaultValue: null
       },
       score: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0  // Default score is 0
+        allowNull: true,
+        defaultValue: null
       }
     }, 
     {

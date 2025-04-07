@@ -57,8 +57,9 @@ const TriviaGame: React.FC = () => {
       }
 
       try {
-        const res = await fetch('/api/game/load');
+        const res = await fetch(`http://localhost:3001/api/game/${questionIndex}`);
         const saved = await res.json();
+        console.log("Loaded saved game:", saved);
 
         if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
           const resume = window.confirm('Resume your last saved game?');
