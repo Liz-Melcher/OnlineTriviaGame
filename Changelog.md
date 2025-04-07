@@ -18,6 +18,10 @@ server/package.json changed type to commonjs to prevent this error:
 [0] ReferenceError: exports is not defined in ES module scope
 [0] This file is being treated as an ES module because it has a '.js' file extension and 'repos/OnlineTriviaGame/server/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
 
+## 
+Can we move the fetch questions to the server side to get rid of the error on TriviaGame.tsx? 
+
+
 
 
 ##

@@ -57,7 +57,7 @@ const TriviaGame: React.FC = () => {
       }
 
       try {
-        const res = await fetch(`http://localhost:3001/api/game/${questionIndex}`);
+        const res = await fetch('routes/game');
         const saved = await res.json();
         console.log("Loaded saved game:", saved);
 
@@ -85,6 +85,10 @@ const TriviaGame: React.FC = () => {
     try {
       const res = await fetch(url);
       const data = await res.json();
+
+      if (!data.results || !Array.isArray(data.results)) {
+        throw new Error(`Invalid response format: ${JSON.stringify(data)}`);
+      }
 
       const decoded = data.results.map((q: Question) => ({
         ...q,
@@ -149,7 +153,7 @@ const TriviaGame: React.FC = () => {
     };
 
     try {
-      await fetch('/api/game/save', {
+      await fetch('routes/game', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameToSave),
