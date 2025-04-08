@@ -1,102 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Form, Button, Card } from 'react-bootstrap'; // react bootstrap makes the nav bar mobile friendly, among other features 
-import { useNavigate } from 'react-router-dom';
-//TODO: Import navigation bar
+import React, { useState } from "react";
+import { Form, Button, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-
-//GameSettings allows users to customize their trivia game using the open trivia API options
-//some options from the API are disabled, specifically the true false option
 const GameSettings: React.FC = () => {
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]); //list of categories fetched from the trivia API as an array 
-  const [amount, setAmount] = useState('10'); //defaults to 10 questions 
-  const [difficulty, setDifficulty] = useState('easy'); // defaults to easy difficulty 
-  //TODO pull in difficulty from user settings? 
-  const [category, setCategory] = useState(''); //defaults to the 'general knowledge' category 
-  const type = 'multiple'; //multiple choice questions only; no True False 
+  const [numQuestions, setNumQuestions] = useState(10);
+  const [category, setCategory] = useState("General Knowledge");
+  const [difficulty, setDifficulty] = useState("easy");
+
   const navigate = useNavigate();
 
-  
-  //Fetch trivia categories from the Open trivia database API when mounted 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const res = await fetch('https://opentdb.com/api_category.php'); //this is the api website 
-        const data = await res.json();
-        setCategories(data.trivia_categories);
-        // Defaults to the first category in the array list if available 
-        if (data.trivia_categories.length > 0) {
-          setCategory(data.trivia_categories[0].id.toString());
-        }
-      } catch (error) {
-        console.error('Error loading categories:', error);
-      }
+  const handleStartGame = async () => {
+    const settings = {
+      amount: numQuestions.toString(),
+      category,
+      difficulty: difficulty.toLowerCase(),
     };
-    loadCategories();
-  }, []);
 
-  //handle the form submission and navigate to the quiz page with the settings passed .
+    const queryParams = new URLSearchParams(settings).toString();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    navigate('/quiz', {
-        // pass the settings to the TriviaGame page 
-        state: {
-          amount: parseInt(amount),
-          difficulty,
-          category,
-          type,
-        },
+    try {
+      const res = await fetch(`/game?${queryParams}`, {
+        method: "GET",
       });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch game questions");
+      }
+
+      const questions = await res.json();
+      console.log("Game questions:", questions);
+
+      // Redirect to the first question or game page
+      navigate("/game");
+    } catch (err) {
+      console.error("Error fetching game questions:", err);
+    }
   };
 
   return (
-    <>
-    
-    
-    <Container className="py-5">
-      <h1 className="text-center mb-4">Create Your Custom Trivia Game</h1>
-      <Card className="p-4 shadow-sm">
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="questionAmount">
-            <Form.Label>Number of Questions</Form.Label>
-            <Form.Select value={amount} onChange={(e) => setAmount(e.target.value)} required>
-              <option value="10">10 Questions</option>
-              <option value="25">25 Questions</option>
-              <option value="50">50 Questions</option>
-            </Form.Select>
-          </Form.Group>
+    <Container className="mt-5">
+      <h2>Customize Your Game</h2>
+      <Form>
+        <Form.Group controlId="formNumQuestions" className="mb-3">
+          <Form.Label>Number of Questions</Form.Label>
+          <Form.Control
+            type="number"
+            min={1}
+            max={50}
+            value={numQuestions}
+            onChange={(e) => setNumQuestions(parseInt(e.target.value))}
+          />
+        </Form.Group>
 
-          <Form.Group className="mb-3" controlId="difficulty">
-            <Form.Label>Difficulty</Form.Label>
-            <Form.Select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} required>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </Form.Select>
-          </Form.Group>
+        <Form.Group controlId="formCategory" className="mb-3">
+          <Form.Label>Category</Form.Label>
+          <Form.Select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option>General Knowledge</option>
+            <option>Science & Nature</option>
+            <option>History</option>
+            <option>Geography</option>
+            <option>Entertainment: Music</option>
+            {/* Add more categories here if needed */}
+          </Form.Select>
+        </Form.Group>
 
-          <Form.Group className="mb-3" controlId="category">
-            <Form.Label>Category</Form.Label>
-            <Form.Select value={category} onChange={(e) => setCategory(e.target.value)} required>
-              {categories.length === 0 ? (
-                <option disabled>Loading categories...</option>
-              ) : (
-                categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))
-              )}
-            </Form.Select>
-          </Form.Group>
+        <Form.Group controlId="formDifficulty" className="mb-3">
+          <Form.Label>Difficulty</Form.Label>
+          <Form.Select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </Form.Select>
+        </Form.Group>
 
-          <Button type="submit" variant="primary" className="w-100">
-            Start Game
-          </Button>
-        </Form>
-      </Card>
+        <Button variant="primary" onClick={handleStartGame}>
+          Start Game
+        </Button>
+      </Form>
     </Container>
-    </>
   );
 };
 
