@@ -13,7 +13,7 @@ const CustomQuestions = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${Auth.getToken()}`,
+                    Authorization: `Bearer ${localStorage.getItem('id_token')}`,
                 },
                 body: JSON.stringify({
                     question,

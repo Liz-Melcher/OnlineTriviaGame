@@ -52,7 +52,8 @@ const Login = () => {
           setIsLogin(true);
         }
       } catch (error) {
-        alert(error.message);
+        const err = error as Error;
+        alert(err.message);
       }
     }
   };
