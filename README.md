@@ -17,8 +17,8 @@ An interactive and customizable trivia game built with React, TypeScript, and No
 ## Technologies Used
 
 - **Frontend**: React, TypeScript, React Router, Bootstrap
-- **Backend**: Node.js, Express, Sequelize (ORM)
-- **Database**: SQLite (development), PostgreSQL (production)
+- **Backend**: Node.js, Express, Sequelize (ORM), TypeScript
+- **Database**: PostgreSQL (production)
 - **API**: Open Trivia Database (https://opentdb.com/)
 
 ## Installation
@@ -31,16 +31,16 @@ An interactive and customizable trivia game built with React, TypeScript, and No
 
 2. Install dependencies for both the client and server:
    ```bash
-   cd client
-   npm install
-   cd ../server
-   npm install
+   npm run install
    ```
-
-3. Set up the database:
+3. Create the database:
+ ```bash
+  psql -U your_username -f server/db/createdb.sql
+ ```
+4. Set up the database:
    - Create a `.env` file in the `server` directory with the following variables:
      ```
-     DB_NAME=trivia_game
+     DB_NAME=trivia_game_db
      DB_USER=your_username
      DB_PASSWORD=your_password
      JWT_SECRET=your_secret_key
@@ -51,12 +51,12 @@ An interactive and customizable trivia game built with React, TypeScript, and No
      node dist/server/seeds/index.js
      ```
 
-4. Start the server:
+5. Start the server:
    ```bash
    npm run start
    ```
 
-5. Start the client:
+6. Start the client:
    ```bash
    cd ../client
    npm run dev
