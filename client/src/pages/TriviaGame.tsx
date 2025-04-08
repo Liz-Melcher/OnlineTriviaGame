@@ -175,7 +175,6 @@ const TriviaGame: React.FC = () => {
   return (
     <>
       
-
       <Container className="py-5">
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold">Trivia Time!</h1>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Table, Button } from 'react-bootstrap';
-//TODO Import NavBar 
+//TODO Import NavBar
+
 
 // Optional: a simple map to show category names for known IDs
 // do we want categories in the high scores list?  I think it makes it fun
