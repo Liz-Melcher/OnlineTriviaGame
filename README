@@ -1,4 +1,6 @@
-# Online Trivia Game
+# Online Trivia Game [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Description
 
 An interactive and customizable trivia game built with React, TypeScript, and Node.js. This application allows users to test their knowledge, track their scores, and customize their game experience.
 
@@ -20,8 +22,6 @@ An interactive and customizable trivia game built with React, TypeScript, and No
 - **API**: Open Trivia Database (https://opentdb.com/)
 
 ## Installation
-
-### Steps
 
 1. Clone the repository:
    ```bash
@@ -69,10 +69,11 @@ An interactive and customizable trivia game built with React, TypeScript, and No
 
 
 ## License
+Project license: MIT
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Contributing
+## Contribution Guidelines
 
 Contributions are welcome! Please fork the repository and submit a pull request.
 
