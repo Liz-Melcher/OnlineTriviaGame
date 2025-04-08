@@ -5,7 +5,7 @@ To start server, use "npm run start". To seed the DB, first run "npm run seed".
 
 Default host is "localhost" and default port is 3001.
 
-To use routes beginning with "/game" or "/user", a JWT token must first be retrieved by logging in, adn that token
+To use routes beginning with "/game", "/user", or "/customquestions", a JWT token must first be retrieved by logging in, and that token
 must be added to an "Authorization" header in the HTTP request with a value of "Bearer {token}".
 
 POST Route: "/login"
@@ -99,7 +99,7 @@ POST Route: "/user/:user/game/save"
   Body Parameters:
     "current_question": number of current_question
     "score": score so far
-  Example: "http://localhost:3001/user/alice/game"
+  Example: "http://localhost:3001/user/alice/game/save"
 
 GET Route: "/customquestions"
   Get all custom made questions.

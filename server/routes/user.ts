@@ -6,6 +6,7 @@ import { validDifficulty, validCategory, validDate, validateUsername, validatePa
 import { questions } from "./game.js";
 import { SavedScore } from "../../interfaces/SavedScore.js";
 
+// ALL ROUTES PREPENDED WITH "/user"
 const router = Router();
 
 router.use("/:user",function (req: Request, res: Response, next) {

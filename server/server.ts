@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import cors from "cors";
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -25,6 +26,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
 app.use("/game", authenticateToken, gameRoutes);
 app.use("/user", authenticateToken, userRoutes);
 app.use("/customquestions", authenticateToken, customQuestionsRoute);

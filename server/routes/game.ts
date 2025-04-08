@@ -13,6 +13,7 @@ export interface APIQuestion {
 
 export let questions: ClientQuestion[] = [];
 
+// ALL ROUTES PREPENDED WITH "/game"
 const router = Router();
 
 // GAME ROUTES
