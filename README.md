@@ -37,7 +37,7 @@ An interactive and customizable trivia game built with React, TypeScript, and No
  ```bash
   psql -U your_username -f server/db/createdb.sql
  ```
-4. Set up the database:
+4. Set up the `.env`, you can use `.env.example`as a template :
    - Create a `.env` file in the `server` directory with the following variables:
      ```
      DB_NAME=trivia_game_db
@@ -45,11 +45,7 @@ An interactive and customizable trivia game built with React, TypeScript, and No
      DB_PASSWORD=your_password
      JWT_SECRET=your_secret_key
      ```
-   - Run the database setup script:
-     ```bash
-     npm run build
-     node dist/server/seeds/index.js
-     ```
+   
 
 5. Start the server:
    ```bash
