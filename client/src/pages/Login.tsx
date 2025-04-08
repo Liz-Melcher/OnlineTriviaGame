@@ -23,7 +23,7 @@ const Login = () => {
     if (validateForm()) {
       try {
         if (isLogin) {
-          const response = await fetch('http://localhost:3001/login', {
+          const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -38,7 +38,7 @@ const Login = () => {
           localStorage.setItem('isLoggedIn', 'true');
           navigate('/home');
         } else {
-          const response = await fetch('http://localhost:3001/register', {
+          const response = await fetch('/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
