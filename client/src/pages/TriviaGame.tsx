@@ -16,11 +16,11 @@ type LocationState = {
   type: string;
 };
 
-const decodeHTML = (html: string): string => {
-  const txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
-};
+// const decodeHTML = (html: string): string => {
+//   const txt = document.createElement('textarea');
+//   txt.innerHTML = html;
+//   return txt.value;
+// };
 
 const shuffleArray = (array: string[]): string[] =>
   [...array].sort(() => Math.random() - 0.5);
@@ -81,23 +81,22 @@ const TriviaGame: React.FC = () => {
   }, []);
 
   const fetchAllQuestions = async () => {
-    const url = `https://opentdb.com/api.php?amount=${totalQuestions}&difficulty=${difficulty}&category=${category}&type=${type}`;
     try {
-      const res = await fetch(url);
+      const res = await fetch('routes/game');
       const data = await res.json();
 
-      if (!data.results || !Array.isArray(data.results)) {
-        throw new Error(`Invalid response format: ${JSON.stringify(data)}`);
-      }
+      // if (!data.results || !Array.isArray(data.results)) {
+      //   throw new Error(`Invalid response format: ${JSON.stringify(data)}`);
+      // }
 
-      const decoded = data.results.map((q: Question) => ({
-        ...q,
-        question: decodeHTML(q.question),
-        correct_answer: decodeHTML(q.correct_answer),
-        incorrect_answers: q.incorrect_answers.map(decodeHTML),
-      }));
+      // const decoded = data.results.map((q: Question) => ({
+      //   ...q,
+      //   question: decodeHTML(q.question),
+      //   correct_answer: decodeHTML(q.correct_answer),
+      //   incorrect_answers: q.incorrect_answers.map(decodeHTML),
+      // }));
 
-      setQuestions(decoded);
+      //setQuestions();
     } catch (err) {
       console.error('Failed to fetch questions:', err);
     }
@@ -123,7 +122,7 @@ const TriviaGame: React.FC = () => {
       };
 
       try {
-        await fetch('/api/scores', {
+        await fetch('/api/scores', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(gameSummary),
@@ -153,7 +152,7 @@ const TriviaGame: React.FC = () => {
     };
 
     try {
-      await fetch('routes/game', {
+      await fetch('user/:user/game/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(gameToSave),
