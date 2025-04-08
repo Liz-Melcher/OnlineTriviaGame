@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
-import { useLocation, useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 
 type Question = {
@@ -9,12 +9,12 @@ type Question = {
   incorrect_answers: string[];
 };
 
-type LocationState = {
-  amount: number;
-  difficulty: string;
-  category: string;
-  type: string;
-};
+// type LocationState = {
+//   amount: number;
+//   difficulty: string;
+//   category: string;
+//   type: string;
+// };
 
 // const decodeHTML = (html: string): string => {
 //   const txt = document.createElement('textarea');
@@ -26,14 +26,14 @@ const shuffleArray = (array: string[]): string[] =>
   [...array].sort(() => Math.random() - 0.5);
 
 const TriviaGame: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state as LocationState | undefined;
+  //const location = useLocation();
+  //const navigate = useNavigate();
+  //const state = location.state as LocationState | undefined;
 
-  const totalQuestions = state?.amount ?? 10;
-  const difficulty = state?.difficulty ?? 'easy';
-  const category = state?.category ?? '9';
-  const type = state?.type ?? 'multiple';
+  // const totalQuestions = state?.amount ?? 10;
+  // const difficulty = state?.difficulty ?? 'easy';
+  // const category = state?.category ?? '9';
+  // const type = state?.type ?? 'multiple';
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionNum, setQuestionNum] = useState(1);
@@ -49,36 +49,32 @@ const TriviaGame: React.FC = () => {
       ])
     : [];
 
-  // useEffect(() => {
-  //   const loadGame = async () => {
-  //     if (!state) {
-  //       navigate('/');
-  //       return;
-  //     }
+  useEffect(() => {
+    const loadGame = async () => {
 
-  //     try {
-  //       const res = await fetch('user/:user/game');
-  //       const saved = await res.json();
-  //       console.log("Loaded saved game:", saved);
+      try {
+        const res = await fetch('user/:user/game');
+        const saved = await res.json();
+        console.log("Loaded saved game:", saved);
 
-  //       if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
-  //         const resume = window.confirm('Resume your last saved game?');
-  //         if (resume) {
-  //           setQuestions(saved.questions);
-  //           setQuestionNum(saved.questionNum);
-  //           setScore(saved.score);
-  //           return;
-  //         }
-  //       }
-  //     } catch (err) {
-  //       console.error('Failed to load saved game:', err);
-  //     }
+        if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
+          const resume = window.confirm('Resume your last saved game?');
+          if (resume) {
+            setQuestions(saved.questions);
+            setQuestionNum(saved.questionNum);
+            setScore(saved.score);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load saved game:', err);
+      }
 
-  //     fetchAllQuestions();
-  //   };
+      fetchAllQuestions();
+    };
 
-  //   loadGame();
-  // }, []);
+    loadGame();
+  }, []);
 
   const fetchAllQuestions = async () => {
     try {
@@ -103,14 +99,12 @@ const TriviaGame: React.FC = () => {
   };
 
   const handleNext = async () => {
-    if (questionNum >= totalQuestions) {
+    if (questionNum >= questions.length) {
       setGameOver(true);
 
       const gameSummary = {
         score,
-        totalQuestions,
-        difficulty,
-        category,
+        totalQuestions: questions.length,
         date: new Date().toISOString(),
       };
 
@@ -167,7 +161,7 @@ const TriviaGame: React.FC = () => {
 
         <div className="d-flex justify-content-between mb-3">
           <div><strong>Score:</strong> {score}</div>
-          <div><strong>Question:</strong> {questionNum} / {totalQuestions}</div>
+          <div><strong>Question:</strong> {questionNum} / {questions.length}</div>
         </div>
 
         <Card className="shadow-sm mb-4">
@@ -175,7 +169,7 @@ const TriviaGame: React.FC = () => {
             {gameOver ? (
               <>
                 <h3>Game Over!</h3>
-                <p>You scored <strong>{score}</strong> out of {totalQuestions}.</p>
+                <p>You scored <strong>{score}</strong> out of {questions.length}.</p>
                 <Button variant="secondary" className="mt-3" onClick={handleRestart}>Play Again</Button>
               </>
             ) : !currentQuestion ? (
