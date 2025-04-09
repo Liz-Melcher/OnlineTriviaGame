@@ -6,7 +6,8 @@ import UserSetting from './pages/UserSettings';
 import GameSettings from './pages/GameSettings';
 import TriviaGame from './pages/TriviaGame';
 import HighScores from './pages/HighScores';
-import Navigation from './components/Navigation';
+import Navigation from './components/navigation'
+import SavedTriviaGame from './pages/SavedTriviaGame';
 
 const App: React.FC = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -20,6 +21,7 @@ const App: React.FC = () => {
         <Route path="/setting" element={<UserSetting />} />
         <Route path="/settings" element={<GameSettings />} />
         <Route path="/quiz" element={<TriviaGame />} />
+        <Route path="/savedquiz" element={<SavedTriviaGame />} />
         <Route path="/highscores" element={<HighScores />} />
       </Routes>
     </Router>
