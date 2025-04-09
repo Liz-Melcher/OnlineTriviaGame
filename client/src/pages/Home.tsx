@@ -32,7 +32,7 @@ const Home = () => {
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
             <img
-              src="/image/Trivia.jpg"
+              src="/images/Trivia.jpg"
               alt="Trivia Game"
               className="img-fluid rounded-circle mb-3 shadow"
             />

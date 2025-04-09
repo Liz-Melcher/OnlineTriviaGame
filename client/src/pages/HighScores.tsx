@@ -53,6 +53,12 @@ const HighScores: React.FC = () => {
     <>
       
       <Container className="py-5">
+      <div className="col-12 col-md-8 col-lg-6">
+            <img
+              src="/images/Trivia.jpg"
+              alt="Trivia Game"
+              className="img-fluid rounded-circle mb-3 shadow"
+            /> </div>
         <h1 className="text-center mb-4">🏆 High Scores</h1>
 
         {highScores.length === 0 ? (

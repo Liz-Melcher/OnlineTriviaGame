@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 //import { useNavigate } from 'react-router-dom';
 //import TokenServices from '../utils/TokenServices';
+import { useLocation } from 'react-router-dom'
 
 
 type Question = {
@@ -50,39 +51,22 @@ const TriviaGame: React.FC = () => {
       ])
     : [];
 
+    const location = useLocation();
+
   useEffect(() => {
-    // const loadGame = async () => {
-
-    //   try {
-    //     const res = await fetch('/game', {
-    //        headers: { Authorization: `${TokenServices.getBearer()}`},
-    //     });
-
-    //     const saved = await res.json();
-    //     console.log("Loaded saved game:", saved);
-
-    //     if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
-    //       const resume = window.confirm('Resume your last saved game?');
-    //       if (resume) {
-    //         setQuestions(saved.questions);
-    //         setQuestionNum(saved.questionNum);
-    //         setScore(saved.score);
-    //         return;
-    //       }
-    //     }
-    //   } catch (err) {
-    //     console.error('Failed to load saved game:', err);
-    //   }
-
-    //   fetchAllQuestions();
-    // };
-
-    // loadGame();
-  }, []);
+    
+    if (location.state?.questions){
+      setQuestions(location.state.questions)
+    }
+    else {
+      console.error("No questions passed from game settings")
+    }
+    
+  }, [location.state]);
 
   const fetchAllQuestions = async () => {
     try {
-      const response = await fetch('/api/game');
+      const response = await fetch('`/api/game`');
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
@@ -92,6 +76,7 @@ const TriviaGame: React.FC = () => {
     } catch (error) {
       console.error('Error fetching questions:', error);
     }
+    
   };
   
 
@@ -158,6 +143,12 @@ const TriviaGame: React.FC = () => {
   return (
     <>
       <Container className="py-5">
+      <div className="col-12 col-md-8 col-lg-6">
+            <img
+              src="/images/Trivia.jpg"
+              alt="Trivia Game"
+              className="img-fluid rounded-circle mb-3 shadow"
+            /> </div>
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold">Trivia Time!</h1>
           <p className="lead">Test your knowledge with a random quiz question.</p>
