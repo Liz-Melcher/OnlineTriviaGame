@@ -51,33 +51,33 @@ const TriviaGame: React.FC = () => {
     : [];
 
   useEffect(() => {
-    const loadGame = async () => {
+    // const loadGame = async () => {
 
-      try {
-        const res = await fetch('/game', {
-           headers: { Authorization: TokenServices.getBearer()},
-        });
+    //   try {
+    //     const res = await fetch('/game', {
+    //        headers: { Authorization: `${TokenServices.getBearer()}`},
+    //     });
 
-        const saved = await res.json();
-        console.log("Loaded saved game:", saved);
+    //     const saved = await res.json();
+    //     console.log("Loaded saved game:", saved);
 
-        if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
-          const resume = window.confirm('Resume your last saved game?');
-          if (resume) {
-            setQuestions(saved.questions);
-            setQuestionNum(saved.questionNum);
-            setScore(saved.score);
-            return;
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load saved game:', err);
-      }
+    //     if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
+    //       const resume = window.confirm('Resume your last saved game?');
+    //       if (resume) {
+    //         setQuestions(saved.questions);
+    //         setQuestionNum(saved.questionNum);
+    //         setScore(saved.score);
+    //         return;
+    //       }
+    //     }
+    //   } catch (err) {
+    //     console.error('Failed to load saved game:', err);
+    //   }
 
-      fetchAllQuestions();
-    };
+    //   fetchAllQuestions();
+    // };
 
-    loadGame();
+    // loadGame();
   }, []);
 
   const fetchAllQuestions = async () => {

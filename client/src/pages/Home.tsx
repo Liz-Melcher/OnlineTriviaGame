@@ -37,12 +37,20 @@ const Home = () => {
               className="img-fluid rounded-circle mb-3 shadow"
             />
 
-            <button
+            {/* <button
               type="button"
               className="btn btn-success w-100 mb-2 shadow-sm"
               onClick={() => navigate('/quiz')}
             >
               Start New Game
+            </button> */}
+
+            <button
+              type="button"
+              className="btn btn-primary w-100 mb-2 shadow-sm"
+              onClick={() => navigate('/settings')}
+            >
+              Play a new Game
             </button>
 
             <button

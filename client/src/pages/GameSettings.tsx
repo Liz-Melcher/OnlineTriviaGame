@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import TokenServices from "../utils/TokenServices";
 
 const GameSettings: React.FC = () => {
   const [numQuestions, setNumQuestions] = useState(10);
@@ -21,6 +22,7 @@ const GameSettings: React.FC = () => {
     try {
       const res = await fetch(`/game?${queryParams}`, {
         method: "GET",
+        headers: { Authorization: `${TokenServices.getBearer()}`},
       });
 
       if (!res.ok) {
@@ -31,7 +33,7 @@ const GameSettings: React.FC = () => {
       console.log("Game questions:", questions);
 
       // Redirect to the first question or game page
-      navigate("/game");
+      navigate("/quiz");
     } catch (err) {
       console.error("Error fetching game questions:", err);
     }
