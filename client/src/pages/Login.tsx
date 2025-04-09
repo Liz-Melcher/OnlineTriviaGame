@@ -35,7 +35,7 @@ const Login = () => {
           }
 
           const data = await response.json();
-          TokenServices.store(data)
+          TokenServices.store(data.token)
           //localStorage.setItem('id_token', data.token);
           //localStorage.setItem('isLoggedIn', 'true');
           navigate('/home');
