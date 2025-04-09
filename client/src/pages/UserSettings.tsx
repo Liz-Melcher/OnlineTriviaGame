@@ -28,7 +28,7 @@ const Setting = () => {
   const handleClearScore = async () => {
     try {
       const user = TokenServices.getUsername()
-      await fetch(`/user/${user}/darkmode`, {
+      await fetch(`/user/${user}/scores`, {
         method: 'DELETE',
         headers: { Authorization: `${TokenServices.getBearer()}`},
       });
