@@ -48,6 +48,7 @@ function GameStateFactory(sequelize: Sequelize) {
     {
       sequelize,
       modelName: "GameState",
+      schema: "trivia",
     }
   )
 }

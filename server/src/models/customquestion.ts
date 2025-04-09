@@ -34,7 +34,8 @@ function CustomQuestionFactory(sequelize: Sequelize) {
     },
     {
       sequelize,
-      modelName: 'CustomQuestion', // Name of the model in the database
+      modelName: 'CustomQuestion', 
+      schema: "trivia",// Name of the model in the database
     }
   )
 }

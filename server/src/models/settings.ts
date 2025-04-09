@@ -50,6 +50,7 @@ function SettingsFactory(sequelize: Sequelize) {
     {
       sequelize,
       modelName: "Settings",
+      schema: "trivia",
     }
   )
 }
