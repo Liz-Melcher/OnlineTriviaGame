@@ -1,21 +1,21 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import cors from "cors";
+// import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { sequelize } from "./models/index";
-import authenticateToken from "./assets/authenticate-token";
+import { sequelize } from "./models/index.js";
+import authenticateToken from "./assets/authenticate-token.js";
 
-import gameRoutes from "./routes/game";
-import userRoutes from "./routes/user";
-import customQuestionsRoute from "./routes/customquestions";
+import gameRoutes from "./routes/game.js";
+import userRoutes from "./routes/user.js";
+import customQuestionsRoute from "./routes/customquestions.js";
 
-import { User } from "./models/user";
-import { Settings } from "./models/settings";
-import { GameState } from "./models/gamestate";
-import { validateUsername, validatePassword } from "./assets/utils";
+import { User } from "./models/user.js";
+import { Settings } from "./models/settings.js";
+import { GameState } from "./models/gamestate.js";
+import { validateUsername, validatePassword } from "./assets/utils.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3001;
 // ✅ CORS Setup
 
 
-app.use(cors());
+// app.use(cors());
 
 // const corsOptions = {
 //   origin: "http://localhost:5173",

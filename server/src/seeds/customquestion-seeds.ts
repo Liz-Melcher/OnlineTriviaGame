@@ -1,7 +1,4 @@
-import { User } from '../models/user';
-import { GameState } from '../models/gamestate';
-import { ClientQuestion } from '../types/ClientQuestion';
-import { CustomQuestion } from '../models/customquestion';
+import { CustomQuestion } from '../models/customquestion.js';
 
 const customQuestions = [
     {

@@ -1,8 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 import bcrypt from 'bcrypt';
 
-import { sequelize } from './index';
-
 class User extends Model {
   declare id: number;
   declare username: string;

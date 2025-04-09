@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
         "build": "npx tsc",
-        "start": "npm run build && node dist/server/server.js",
-        "seed": "npm run build && node dist/server/seeds/index.js",
+        "start": "npm run build && node dist/server.js",
+        "seed": "npm run build && node dist/seeds/index.js",
         "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
     },
     "dependencies": {
