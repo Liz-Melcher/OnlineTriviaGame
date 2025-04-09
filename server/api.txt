@@ -62,13 +62,13 @@ POST Route: "/user/:user/difficulty"
     "difficulty": "easy" || "medium" || "hard"
   Example: "http://localhost:3001/user/alice/difficulty"
 
-GET Route: "/user/:user/score"
+GET Route: "/user/:user/scores"
   Gets the history of user scores in an array of SavedScore types.
   Route Parameters:
     ":user": username
-  Example: "http://localhost:3001/user/alice/score"
+  Example: "http://localhost:3001/user/alice/scores"
 
-POST Route: "/user/:user/score"
+POST Route: "/user/:user/scores"
   Adds a saved score for the user.
   Route Parameters:
     ":user": username
@@ -78,13 +78,13 @@ POST Route: "/user/:user/score"
     "category": category of game
     "difficulty": difficulty of game
     "date": date game took place. Must be in format "YYYY-MM-DD"
-  Example: "http://localhost:3001/user/alice/score"
+  Example: "http://localhost:3001/user/alice/scores"
 
-DEL Route: "/user/:user/score"
+DEL Route: "/user/:user/scores"
   Deletes the saved scores for the user.
   Route Parameters:
     ":user": username
-  Example: "http://localhost:3001/user/alice/score"
+  Example: "http://localhost:3001/user/alice/scores"
 
 GET Route: "/user/:user/game"
   Gets the saved game for the user.

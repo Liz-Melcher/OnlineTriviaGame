@@ -9,14 +9,16 @@ import HighScores from './pages/HighScores';
 import Navigation from './components/Navigation'
 import SavedTriviaGame from './pages/SavedTriviaGame';
 
+import TokenServices from './utils/TokenServices';
+
 const App: React.FC = () => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
   return (
     <Router>
       <Navigation />
       <Routes>
-        <Route path="/" element={isLoggedIn ? <Navigate to="/home" /> : <Login />} />
+        <Route path="/" element={TokenServices.loggedIn() ? <Navigate to="/home" /> : <Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/setting" element={<UserSetting />} />
         <Route path="/settings" element={<GameSettings />} />
