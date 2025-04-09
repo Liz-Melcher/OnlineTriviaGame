@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TokenServices from '../utils/TokenServices';
 
 
 const Setting = () => {
@@ -12,7 +13,7 @@ const Setting = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+          Authorization: `${TokenServices.getBearer()}`,
         },
         body: JSON.stringify({ darkmode: newMode }),
       });
@@ -27,7 +28,7 @@ const Setting = () => {
     try {
       await fetch('/user/me/scores', {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        headers: { Authorization: TokenServices.getBearer()},
       });
 
       alert('Scores cleared successfully!');

@@ -6,7 +6,7 @@ import UserSetting from './pages/UserSettings';
 import GameSettings from './pages/GameSettings';
 import TriviaGame from './pages/TriviaGame';
 import HighScores from './pages/HighScores';
-import Navigation from './components/navigation';
+import Navigation from './components/Navigation';
 
 const App: React.FC = () => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';

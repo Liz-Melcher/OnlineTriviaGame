@@ -1,8 +1,8 @@
 // models/settings.ts
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-import { sequelize } from './index.js';
-import { User } from './user.js'; // Import the User model for the foreign key reference
+import { sequelize } from './index';
+import { User } from './user'; // Import the User model for the foreign key reference
 
 class Settings extends Model {
   declare id: number;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 //import { useNavigate } from 'react-router-dom';
+import TokenServices from '../utils/TokenServices';
 
 
 type Question = {
@@ -53,7 +54,10 @@ const TriviaGame: React.FC = () => {
     const loadGame = async () => {
 
       try {
-        const res = await fetch('user/:user/game');
+        const res = await fetch('/game', {
+           headers: { Authorization: TokenServices.getBearer()},
+        });
+
         const saved = await res.json();
         console.log("Loaded saved game:", saved);
 

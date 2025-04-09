@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+import TokenServices from '../utils/TokenServices';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -9,8 +9,9 @@ const Home = () => {
   useEffect(() => {
     const checkSavedGame = async () => {
       try {
-        const response = await fetch('/user/me/game', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        const user = TokenServices.getUsername()
+        const response = await fetch(`/user/${user}/game`, {
+          headers: {Authorization: `${TokenServices.getBearer()}`},
         });
 
         if (response.ok) {
@@ -27,7 +28,6 @@ const Home = () => {
 
   return (
     <>
-      
       <section className="container-fluid text-center p-3">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
@@ -36,21 +36,24 @@ const Home = () => {
               alt="Trivia Game"
               className="img-fluid rounded-circle mb-3 shadow"
             />
+
             <button
               type="button"
-              className="btn btn-primary w-100 mb-2 shadow-sm"
-              onClick={() => navigate('/settings')}
+              className="btn btn-success w-100 mb-2 shadow-sm"
+              onClick={() => navigate('/quiz')}
             >
-              Play a new Game
+              Start New Game
             </button>
+
             <button
               type="button"
               className="btn btn-primary w-100 mb-2 shadow-sm"
               onClick={() => navigate('/quiz')}
               disabled={!hasSavedGame}
             >
-              Continue existing Game
+              Continue Existing Game
             </button>
+
             <button
               type="button"
               className="btn btn-primary w-100 mb-2 shadow-sm"
@@ -58,6 +61,7 @@ const Home = () => {
             >
               History of Scores
             </button>
+
             <button
               type="button"
               className="btn btn-primary w-100 shadow-sm"

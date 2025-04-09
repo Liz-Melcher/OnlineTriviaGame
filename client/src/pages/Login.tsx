@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TokenServices from '../utils/TokenServices';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -23,7 +24,7 @@ const Login = () => {
     if (validateForm()) {
       try {
         if (isLogin) {
-          const response = await fetch('/login', {
+          const response = await fetch('login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -34,8 +35,9 @@ const Login = () => {
           }
 
           const data = await response.json();
-          localStorage.setItem('id_token', data.token);
-          localStorage.setItem('isLoggedIn', 'true');
+          TokenServices.store(data)
+          //localStorage.setItem('id_token', data.token);
+          //localStorage.setItem('isLoggedIn', 'true');
           navigate('/home');
         } else {
           const response = await fetch('/register', {
