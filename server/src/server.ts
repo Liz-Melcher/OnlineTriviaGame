@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { sequelize } from "./models/index.js";
-import authenticateToken from "./assets/authenticate-token.js";
+import authenticateToken from "./middleware/authenticate-token.js";
 
 import gameRoutes from "./routes/game.js";
 import userRoutes from "./routes/user.js";
