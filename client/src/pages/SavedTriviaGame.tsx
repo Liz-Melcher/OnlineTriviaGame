@@ -26,7 +26,7 @@ type Question = {
 const shuffleArray = (array: string[]): string[] =>
   [...array].sort(() => Math.random() - 0.5);
 
-const TriviaGame: React.FC = () => {
+const SavedTriviaGame: React.FC = () => {
   //const location = useLocation();
   //const navigate = useNavigate();
   //const state = location.state as LocationState | undefined;
@@ -51,50 +51,36 @@ const TriviaGame: React.FC = () => {
     : [];
 
   useEffect(() => {
-    // const loadGame = async () => {
+    const loadGame = async () => {
 
-    //   try {
-    //     const res = await fetch('/game', {
-    //        headers: { Authorization: `${TokenServices.getBearer()}`},
-    //     });
+      try {
+        const res = await fetch('/game', {
+           headers: { Authorization: `${TokenServices.getBearer()}`},
+        });
 
-    //     const saved = await res.json();
-    //     console.log("Loaded saved game:", saved);
+        const saved = await res.json();
+        console.log("Loaded saved game:", saved);
 
-    //     if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
-    //       const resume = window.confirm('Resume your last saved game?');
-    //       if (resume) {
-    //         setQuestions(saved.questions);
-    //         setQuestionNum(saved.questionNum);
-    //         setScore(saved.score);
-    //         return;
-    //       }
-    //     }
-    //   } catch (err) {
-    //     console.error('Failed to load saved game:', err);
-    //   }
+        if (saved?.questions && saved?.questionNum && saved?.score !== undefined) {
+          const resume = window.confirm('Resume your last saved game?');
+          if (resume) {
+            setQuestions(saved.questions);
+            setQuestionNum(saved.questionNum);
+            setScore(saved.score);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load saved game:', err);
+      }
 
-    //   fetchAllQuestions();
-    // };
+      //fetchAllQuestions();
+    };
 
-    // loadGame();
+    loadGame();
   }, []);
 
-  const fetchAllQuestions = async () => {
-    try {
-      const response = await fetch('/api/game');
-      if (!response.ok) {
-        throw new Error('Failed to fetch questions');
-      }
   
-      const data: Question[] = await response.json();
-      setQuestions(data); // 
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-    }
-  };
-  
-
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
     if (answer === currentQuestion.correct_answer) {
@@ -132,7 +118,7 @@ const TriviaGame: React.FC = () => {
     setQuestionNum(1);
     setSelectedAnswer(null);
     setGameOver(false);
-    fetchAllQuestions();
+    //fetchAllQuestions();
   };
 
   const handleSave = async () => {
@@ -226,4 +212,4 @@ const TriviaGame: React.FC = () => {
   );
 };
 
-export default TriviaGame;
+export default SavedTriviaGame;

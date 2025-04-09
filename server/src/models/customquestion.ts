@@ -1,7 +1,7 @@
 // models/customQuestions.ts
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-import { sequelize } from './index.js';
+import { sequelize } from './index';
 
 class CustomQuestion extends Model {
   declare id: number;

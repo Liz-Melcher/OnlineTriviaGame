@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express";
-import { User } from "../models/user.js";
-import { Settings } from "../models/settings.js";
-import { GameState } from "../models/gamestate.js";
-import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "../assets/utils.js";
-import { questions } from "./game.js";
-import { SavedScore } from "../../interfaces/SavedScore.js";
+import { User } from "../models/user";
+import { Settings } from "../models/settings";
+import { GameState } from "../models/gamestate";
+import { validDifficulty, validCategory, validDate, validateUsername, validatePassword } from "../assets/utils";
+import { questions } from "./game";
+import { SavedScore } from "../types/SavedScore";
 
 // ALL ROUTES PREPENDED WITH "/user"
 const router = Router();

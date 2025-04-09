@@ -2,10 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Sequelize } from 'sequelize';
-import { UserFactory } from './user.js';
-import { GameStateFactory } from './gamestate.js';
-import { SettingsFactory } from './settings.js';
-import { CustomQuestionFactory } from './customquestion.js';
+import { UserFactory } from './user';
+import { GameStateFactory } from './gamestate';
+import { SettingsFactory } from './settings';
+import { CustomQuestionFactory } from './customquestion';
 
 const sequelize = process.env.DB_URL
   ? new Sequelize(process.env.DB_URL)

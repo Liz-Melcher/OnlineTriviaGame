@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TokenServices from '../utils/TokenServices';
 
 
 const Setting = () => {
@@ -8,11 +9,12 @@ const Setting = () => {
   const toggleDarkMode = async () => {
     try {
       const newMode = !darkMode;
-      await fetch('/user/me/darkmode', {
+      const user = TokenServices.getUsername()
+      await fetch(`/user/${user}/darkmode`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+          Authorization: `${TokenServices.getBearer()}`,
         },
         body: JSON.stringify({ darkmode: newMode }),
       });
@@ -25,9 +27,10 @@ const Setting = () => {
 
   const handleClearScore = async () => {
     try {
-      await fetch('/user/me/scores', {
+      const user = TokenServices.getUsername()
+      await fetch(`/user/${user}/darkmode`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        headers: { Authorization: `${TokenServices.getBearer()}`},
       });
 
       alert('Scores cleared successfully!');
@@ -40,11 +43,12 @@ const Setting = () => {
     const newPassword = prompt('Enter your new password:');
     if (newPassword) {
       try {
-        await fetch('/user/me/changepassword', {
+        const user = TokenServices.getUsername()
+        await fetch(`/user/${user}/changepassword`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+            Authorization: `${TokenServices.getBearer()}`,
           },
           body: JSON.stringify({ password: newPassword }),
         });
@@ -59,11 +63,12 @@ const Setting = () => {
   const handleDifficultyChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newDifficulty = e.target.value;
     try {
-      await fetch('/user/me/difficulty', {
+      const user = TokenServices.getUsername()
+      await fetch(`/user/${user}/difficulty`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+          Authorization: `${TokenServices.getBearer()}`,
         },
         body: JSON.stringify({ difficulty: newDifficulty }),
       });
@@ -78,18 +83,19 @@ const Setting = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const darkModeRes = await fetch('/user/me/darkmode', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        const user = TokenServices.getUsername();
+        const darkModeRes = await fetch(`/user/${user}/darkmode`, {
+          headers: { Authorization: `${TokenServices.getBearer()}` },
         });
-        const difficultyRes = await fetch('/user/me/difficulty', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('id_token')}` },
+        const difficultyRes = await fetch(`/user/${user}/difficulty`, {
+          headers: { Authorization: `${TokenServices.getBearer()}` },
         });
 
         if (darkModeRes.ok) {
-          setDarkMode(await darkModeRes.json());
+          setDarkMode(await darkModeRes.text() === 'true');
         }
         if (difficultyRes.ok) {
-          setDifficulty(await difficultyRes.json());
+          setDifficulty(await difficultyRes.text());
         }
       } catch (error) {
         console.error('Error fetching settings:', error);

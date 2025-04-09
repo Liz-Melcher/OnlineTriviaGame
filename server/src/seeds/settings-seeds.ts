@@ -1,5 +1,5 @@
-import { User } from '../models/user.js';
-import { Settings } from '../models/settings.js';
+import { User } from '../models/user';
+import { Settings } from '../models/settings';
 
 const date = new Date();
 const today = date.toISOString().split('T')[0];

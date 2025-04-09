@@ -1,6 +1,6 @@
-import { User } from '../models/user.js';
-import { GameState } from '../models/gamestate.js';
-import { ClientQuestion } from '../../interfaces/ClientQuestion.js';
+import { User } from '../models/user';
+import { GameState } from '../models/gamestate';
+import { ClientQuestion } from '../types/ClientQuestion';
 
 const aliceQuestions: ClientQuestion[] = [
     {
