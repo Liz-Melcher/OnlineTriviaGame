@@ -36,6 +36,7 @@ function UserFactory(sequelize: Sequelize) {
     {
       sequelize,
       modelName: 'User',
+      schema: "trivia",
       hooks: {
         beforeCreate: async (user) => {
           await user.setPassword(user.password);
