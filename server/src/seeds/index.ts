@@ -1,8 +1,8 @@
-import { sequelize } from '../models/index';
-import { seedUsers } from './user-seeds';
-import { seedSettings } from './settings-seeds';
-import { seedGameStates } from './gamestate-seeds';
-import { seedCustomQuestions } from './customquestion-seeds';
+import { sequelize } from '../models/index.js';
+import { seedUsers } from './user-seeds.js';
+import { seedSettings } from './settings-seeds.js';
+import { seedGameStates } from './gamestate-seeds.js';
+import { seedCustomQuestions } from './customquestion-seeds.js';
 
 const seedAll = async (): Promise<void> => {
     try {

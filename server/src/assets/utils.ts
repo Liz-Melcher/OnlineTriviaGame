@@ -1,4 +1,4 @@
-import { categories } from "./categories";
+import { categories } from "./categories.js";
 
 function validDifficulty(difficulty: string): boolean {
     const difficulties = ['easy', 'medium', 'hard'];
