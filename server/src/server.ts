@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-// import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -20,17 +19,7 @@ import { validateUsername, validatePassword } from "./assets/utils.js";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// ✅ CORS Setup
-
-
-// app.use(cors());
-
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-//   credentials: true,
-// };
-// app.use(cors(corsOptions));            // Handle regular requests
-// app.options("*", cors(corsOptions));   // Handle preflight requests (OPTIONS)
+app.use(express.static('../client/dist'));
 
 // ✅ Body Parsers
 app.use(express.json());
