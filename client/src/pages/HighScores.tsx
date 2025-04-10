@@ -22,7 +22,6 @@ const HighScores: React.FC = () => {
         }
 
         const scores = await res.json();
-        console.log(scores);
         setHighScores(scores);
       } catch(err) {
         console.error("Error fetching score history:", err);
@@ -42,7 +41,6 @@ const HighScores: React.FC = () => {
           headers: { Authorization: `${TokenServices.getBearer()}`},
         });
 
-        console.log(res);
         if(!res.ok) {
           throw new Error("Error clearing score history");
         }

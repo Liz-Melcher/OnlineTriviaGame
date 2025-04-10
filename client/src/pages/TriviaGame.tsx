@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Container, Button, Card } from 'react-bootstrap'; // React Bootstrap helps with styling, especially mobile first design
 //import { useNavigate } from 'react-router-dom';
 //import TokenServices from '../utils/TokenServices';
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
+import TokenServices from '../utils/TokenServices';
+import { SavedScore } from "../../../server/src/types/SavedScore";
 
 type Question = {
   question: string;
@@ -64,20 +66,7 @@ const TriviaGame: React.FC = () => {
     
   }, [location.state]);
 
-  const fetchAllQuestions = async () => {
-    try {
-      const response = await fetch('`/api/game`');
-      if (!response.ok) {
-        throw new Error('Failed to fetch questions');
-      }
-  
-      const data: Question[] = await response.json();
-      setQuestions(data); // 
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-    }
-    
-  };
+  const navigate = useNavigate();
   
 
   const handleAnswerClick = (answer: string) => {
@@ -91,17 +80,34 @@ const TriviaGame: React.FC = () => {
     if (questionNum >= questions.length) {
       setGameOver(true);
 
-      const gameSummary = {
-        score,
-        totalQuestions: questions.length,
-        date: new Date().toISOString(),
-      };
+      const numQuestions = questions.length;
+      const category = location.state.category;
+      const difficulty = location.state.difficulty;
+      const today = new Date().toISOString().split('T')[0];
+      const savedScore: SavedScore = {
+        questions: numQuestions,
+        answers: score,
+        category: category,
+        difficulty: difficulty,
+        date: today
+      }
+  
+      // console.log(questions.length);
+      // console.log(score);
+      // console.log(location.state.category);
+      // console.log(location.state.difficulty);
+      // console.log(new Date().toISOString().split('T')[0])
+      // console.log(savedScore);
 
       try {
-        await fetch('/api/scores', { 
+        const user = TokenServices.getUsername();
+        await fetch(`/user/${user}/scores`, { 
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(gameSummary),
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `${TokenServices.getBearer()}`,
+          },
+          body: JSON.stringify(savedScore),
         });
       } catch (err) {
         console.error('Failed to save high score:', err);
@@ -110,14 +116,6 @@ const TriviaGame: React.FC = () => {
       setQuestionNum(prev => prev + 1);
       setSelectedAnswer(null);
     }
-  };
-
-  const handleRestart = () => {
-    setScore(0);
-    setQuestionNum(1);
-    setSelectedAnswer(null);
-    setGameOver(false);
-    fetchAllQuestions();
   };
 
   const handleSave = async () => {
@@ -140,15 +138,54 @@ const TriviaGame: React.FC = () => {
     }
   };
 
+  // function saveScore() {
+  //   const numQuestions = questions.length;
+  //   const category = location.state.category;
+  //   const difficulty = location.state.difficulty;
+  //   const today = new Date().toISOString().split('T')[0];
+
+  //   const savedScore: SavedScore = {
+  //     questions: numQuestions,
+  //     answers: score,
+  //     category: category,
+  //     difficulty: difficulty,
+  //     date: today
+  //   }
+
+  //   console.log(questions.length);
+  //   console.log(score);
+  //   console.log(location.state.category);
+  //   console.log(location.state.difficulty);
+  //   console.log(new Date().toISOString().split('T')[0])
+  //   console.log(savedScore);
+    // try {
+    //   await fetch('user/:user/scores', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(gameToSave),
+    //   });
+    //   alert('Game saved! You can resume it later.');
+    // } catch (err) {
+    //   console.error('Failed to save game:', err);
+    //   alert('There was an error saving your game.');
+    // }
+  // }
+
+  function decodeHtmlEntities(str: string) {
+    const doc = new DOMParser().parseFromString(str, "text/html");
+    return doc.documentElement.textContent;
+  }
+
   return (
     <>
-      <Container className="py-5">
-      <div className="col-12 col-md-8 col-lg-6">
-            <img
-              src="/images/Trivia.jpg"
-              alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
-            /> </div>
+      <Container fluid className="p-3 row justify-content-center text-align center">
+        <div className="col-12 col-md-8 col-lg-6">
+          <img
+            src="/images/Trivia.jpg"
+            alt="Trivia Game"
+            className="img-fluid rounded-circle mb-3 shadow"
+          />
+        </div>
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold">Trivia Time!</h1>
           <p className="lead">Test your knowledge with a random quiz question.</p>
@@ -165,13 +202,13 @@ const TriviaGame: React.FC = () => {
               <>
                 <h3>Game Over!</h3>
                 <p>You scored <strong>{score}</strong> out of {questions.length}.</p>
-                <Button variant="secondary" className="mt-3" onClick={handleRestart}>Play Again</Button>
+                <Button variant="secondary" className="mt-3" onClick={() => { navigate("/settings") }}>Play Again</Button>
               </>
             ) : !currentQuestion ? (
               <p>Loading questions...</p>
             ) : (
               <>
-                <Card.Title>{currentQuestion.question}</Card.Title>
+                <Card.Title>{decodeHtmlEntities(currentQuestion.question)}</Card.Title>
                 <div className="d-grid gap-2 mt-3">
                   {answers.map((ans, index) => {
                     let variant = 'outline-secondary';
@@ -186,7 +223,7 @@ const TriviaGame: React.FC = () => {
                         disabled={!!selectedAnswer}
                         onClick={() => handleAnswerClick(ans)}
                       >
-                        {ans}
+                        {decodeHtmlEntities(ans)}
                       </Button>
                     );
                   })}

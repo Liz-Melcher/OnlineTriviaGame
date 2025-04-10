@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import TokenServices from "../utils/TokenServices";
+import { categories } from "../../../server/src/assets/categories"
 
 const GameSettings: React.FC = () => {
   const [numQuestions, setNumQuestions] = useState(10);
@@ -9,6 +10,8 @@ const GameSettings: React.FC = () => {
   const [difficulty, setDifficulty] = useState("easy");
 
   const navigate = useNavigate();
+
+  const categoryNames = categories.map(category => category.name);
 
   const handleStartGame = async () => {
     const settings = {
@@ -30,10 +33,9 @@ const GameSettings: React.FC = () => {
       }
 
       const questions = await res.json();
-      console.log("Game questions:", questions);
-
+      
       // Redirect to the first question or game page
-      navigate("/quiz", {state: { questions }});
+      navigate("/quiz", {state: { questions, difficulty, category }});
     } catch (err) {
       console.error("Error fetching game questions:", err);
     }
@@ -67,12 +69,11 @@ const GameSettings: React.FC = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option>General Knowledge</option>
-              <option>Science & Nature</option>
-              <option>History</option>
-              <option>Geography</option>
-              <option>Entertainment: Music</option>
-              {/* Add more categories here if needed */}
+              {categoryNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
 
