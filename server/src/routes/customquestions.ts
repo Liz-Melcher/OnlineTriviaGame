@@ -2,7 +2,6 @@ import { Router, Request, Response } from "express";
 import { CustomQuestion } from "../models/customquestion.js";
 import { ClientQuestion } from "../types/ClientQuestion.js";
 
-// ALL ROUTES PREPENDED WITH "/customquestions"
 const router = Router();
 
 // CUSTOM QUESTIONS routes

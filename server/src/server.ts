@@ -32,22 +32,16 @@ app.use("/customquestions", authenticateToken, customQuestionsRoute);
 
 // ✅ Login Route
 app.post("/login", async (req: Request, res: Response): Promise<void> => {
-    console.log("🔐 Hit the login route");
     try {
       const { username, password } = req.body;
-      console.log("LOGIN ATTEMPT:", username);
   
       const user = await User.findOne({ where: { username } });
       if (!user) {
-        console.log("User not found.");
         res.status(400).json({ message: "Invalid username or password" });
         return;
       }
   
-      console.log("User found:", user.username);
       const isPasswordValid = await bcrypt.compare(password, user.password);
-  
-      console.log("Password match?", isPasswordValid);
   
       if (!isPasswordValid) {
         res.status(400).json({ message: "Invalid username or password" });
