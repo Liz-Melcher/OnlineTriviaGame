@@ -64,7 +64,7 @@ const Login = () => {
     <section className="container text-center p-3">
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-6">
-          <img src="/image/Trivia1.jpg" alt="Trivia Game" className="img-fluid rounded-circle mb-3 shadow" />
+          <img src="/images/Trivia1.jpg" alt="Trivia Game" className="img-fluid rounded-circle mb-3 shadow" />
           <div className="d-flex justify-content-center mb-3">
             <button className={`btn ${isLogin ? 'btn-primary' : 'btn-outline-primary'} me-2`} onClick={() => setIsLogin(true)}>Login</button>
             <button className={`btn ${!isLogin ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => setIsLogin(false)}>Sign Up</button>

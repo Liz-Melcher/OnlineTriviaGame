@@ -33,7 +33,7 @@ const GameSettings: React.FC = () => {
       console.log("Game questions:", questions);
 
       // Redirect to the first question or game page
-      navigate("/quiz");
+      navigate("/quiz", {state: { questions }});
     } catch (err) {
       console.error("Error fetching game questions:", err);
     }
@@ -41,8 +41,14 @@ const GameSettings: React.FC = () => {
 
   return (
     <Container className="mt-5">
+      
       <h2>Customize Your Game</h2>
       <Form>
+      <img
+              src="/images/Trivia.jpg"
+              alt="Trivia Game"
+              className="img-fluid rounded-circle mb-3 shadow"
+            />
         <Form.Group controlId="formNumQuestions" className="mb-3">
           <Form.Label>Number of Questions</Form.Label>
           <Form.Control
