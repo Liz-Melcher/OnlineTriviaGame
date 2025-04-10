@@ -19,12 +19,12 @@ const App: React.FC = () => {
       <Navigation />
       <Routes>
         <Route path="/" element={TokenServices.loggedIn() ? <Navigate to="/home" /> : <Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/setting" element={<UserSetting />} />
-        <Route path="/settings" element={<GameSettings />} />
-        <Route path="/quiz" element={<TriviaGame />} />
-        <Route path="/savedquiz" element={<SavedTriviaGame />} />
-        <Route path="/highscores" element={<HighScores />} />
+        <Route path="/home" element={TokenServices.loggedIn()? <Home/> : <Login/>} />
+        <Route path="/setting" element={TokenServices.loggedIn()? <UserSetting /> : <Login/>} />
+        <Route path="/settings" element={TokenServices.loggedIn()?<GameSettings /> : <Login/>} />
+        <Route path="/quiz" element={TokenServices.loggedIn()?<TriviaGame />: <Login/>} />
+        <Route path="/savedquiz" element={TokenServices.loggedIn()?<SavedTriviaGame />: <Login/>} />
+        <Route path="/highscores" element={TokenServices.loggedIn()?<HighScores />: <Login/>} />
       </Routes>
     </Router>
   );
