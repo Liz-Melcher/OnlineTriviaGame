@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TokenServices from '../utils/TokenServices';
+import { useAuth } from '../AuthContext';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,6 +9,8 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<{ username?: string; password?: string; confirmPassword?: string }>({});
   const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const validateForm = () => {
     const newErrors: { username?: string; password?: string; confirmPassword?: string } = {};
@@ -35,9 +37,7 @@ const Login = () => {
           }
 
           const data = await response.json();
-          TokenServices.store(data.token)
-          //localStorage.setItem('id_token', data.token);
-          //localStorage.setItem('isLoggedIn', 'true');
+          login(data.token);
           navigate('/home');
         } else {
           const response = await fetch('/register', {

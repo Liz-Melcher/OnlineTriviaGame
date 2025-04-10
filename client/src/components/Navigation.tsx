@@ -1,20 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import TokenServices from '../utils/TokenServices';
+import { useAuth } from '../AuthContext';
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const { loggedIn, logout, getUsername } = useAuth();
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
-      TokenServices.destroy(); // Destroys JWT login token
-      // localStorage.removeItem('isLoggedIn');
-      // localStorage.removeItem('user'); // Optional: Clear user data if stored
+      logout(); // Destroys JWT login token
 
       // Ensure navigation to the login page
       navigate('/', { replace: true }); // Use replace to prevent back navigation to a logged-in state
-
-      // Reload the page to ensure the state is reset
-      window.location.reload();
     }
   };
 
@@ -29,12 +25,17 @@ const Navigation = () => {
           Home
         </button>
         {/* Log Out button */}
-        <button
-          className="btn btn-outline-light"
-          onClick={handleLogout}
-        >
-          Log Out
-        </button>
+        {loggedIn && (
+          <>
+            <span className="me-3 text-white fw-bold fst-italic">{getUsername()}</span>
+            <button
+              className="btn btn-outline-light"
+              onClick={handleLogout}
+            >
+              Log Out
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
