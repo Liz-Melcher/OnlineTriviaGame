@@ -116,11 +116,13 @@ const Setting = () => {
               className="img-fluid rounded-circle mb-3 shadow"
             />
           <div className="col-12 col-md-8 col-lg-6">
-          <img
-              src="/image/Trivia.jpg"
+            <img
+              src="/images/Trivia.jpg"
               alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
+              className="img-fluid rounded-circle mb-4 shadow d-block mx-auto"
+              style={{ maxWidth: "250px", height: "auto" }}
             />
+
             <h2 className="mb-4">User Settings</h2>
             <button
               type="button"

@@ -34,8 +34,10 @@ const Home = () => {
             <img
               src="/images/Trivia.jpg"
               alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
+              className="img-fluid rounded-circle mb-4 shadow"
+              style={{ maxWidth: "250px", height: "auto" }}
             />
+
 
             {/* <button
               type="button"

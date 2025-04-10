@@ -44,11 +44,12 @@ const GameSettings: React.FC = () => {
       
       <h2>Customize Your Game</h2>
       <Form>
-      <img
-              src="/images/Trivia.jpg"
-              alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
-            />
+        <img
+          src="/images/Trivia.jpg"
+          alt="Trivia Game"
+          className="img-fluid rounded-circle mb-4 shadow d-block mx-auto"
+          style={{ maxWidth: "250px", height: "auto" }}
+        />
         <Form.Group controlId="formNumQuestions" className="mb-3">
           <Form.Label>Number of Questions</Form.Label>
           <Form.Control

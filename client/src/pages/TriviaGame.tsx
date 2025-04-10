@@ -144,11 +144,13 @@ const TriviaGame: React.FC = () => {
     <>
       <Container className="py-5">
       <div className="col-12 col-md-8 col-lg-6">
-            <img
-              src="/images/Trivia.jpg"
-              alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
-            /> </div>
+        <img
+          src="/images/Trivia.jpg"
+          alt="Trivia Game"
+          className="img-fluid rounded-circle mb-4 shadow d-block mx-auto"
+          style={{ maxWidth: "250px", height: "auto" }}
+        />
+        </div>
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold">Trivia Time!</h1>
           <p className="lead">Test your knowledge with a random quiz question.</p>
