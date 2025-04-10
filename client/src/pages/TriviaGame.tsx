@@ -56,6 +56,8 @@ const TriviaGame: React.FC = () => {
     const location = useLocation();
 
   useEffect(() => {
+
+    console.log(location.state);
     
     if (location.state?.questions){
       setQuestions(location.state.questions)
@@ -64,6 +66,8 @@ const TriviaGame: React.FC = () => {
       console.error("No questions passed from game settings")
     }
     
+    setQuestionNum(location.state.current_question || 1);
+    setScore(location.state.score || 0);
   }, [location.state]);
 
   const navigate = useNavigate();

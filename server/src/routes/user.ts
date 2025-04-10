@@ -79,7 +79,9 @@ router.get("/:user/game", async function(req: Request, res: Response) {
         res.status(200).json({ 
             questions: userGameState["questions"], 
             current_question: userGameState["current_question"], 
-            score: userGameState["score"]
+            score: userGameState["score"],
+            difficulty: userGameState["difficulty"],
+            category: userGameState["category"]
         });
     } catch (error) {
         console.error('Error during password change:', error);

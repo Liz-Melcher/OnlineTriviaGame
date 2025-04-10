@@ -80,7 +80,7 @@ POST Route: "/user/:user/scores"
     "date": date game took place. Must be in format "YYYY-MM-DD"
   Example: "http://localhost:3001/user/alice/scores"
 
-DEL Route: "/user/:user/scores"
+DELETE Route: "/user/:user/scores"
   Deletes the saved scores for the user.
   Route Parameters:
     ":user": username

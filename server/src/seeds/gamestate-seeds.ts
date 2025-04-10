@@ -197,8 +197,8 @@ export const seedGameStates = async () => {
   const malloryId = user!.id
 
   await GameState.bulkCreate([
-    { userId: aliceId, questions: aliceQuestions, current_question: 4, score: 2 },
-    { userId: bobId, questions: bobQuestions, current_question: 7, score: 6 },
+    { userId: aliceId, questions: aliceQuestions, current_question: 4, score: 2, difficulty: "medium", category: "History" },
+    { userId: bobId, questions: bobQuestions, current_question: 7, score: 6, difficulty: "easy", category: "Celebrities" },
     { userId: malloryId },
   ],);
 };

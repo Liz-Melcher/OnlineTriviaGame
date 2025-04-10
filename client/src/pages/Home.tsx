@@ -55,7 +55,7 @@ const Home = () => {
           <button
             type="button"
             className="btn btn-primary w-100 mb-2 shadow-sm"
-            onClick={() => navigate('/quiz')}
+            onClick={() => navigate('/savedquiz')}
             disabled={!hasSavedGame}
           >
             Continue Existing Game

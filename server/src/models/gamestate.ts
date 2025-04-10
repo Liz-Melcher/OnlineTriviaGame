@@ -8,6 +8,8 @@ class GameState extends Model {
   declare questions: object[]; // JSONB array
   declare current_question: number;
   declare score: number;
+  declare difficulty: string;
+  declare category: string;
 }
 
 function GameStateFactory(sequelize: Sequelize) {
@@ -42,7 +44,17 @@ function GameStateFactory(sequelize: Sequelize) {
         type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: null
-      }
+      },
+      difficulty: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+      },
     }, 
     {
       sequelize,
