@@ -57,7 +57,7 @@ const HighScores: React.FC = () => {
   return (
     <>
       
-      <Container className="py-5">
+      <Container fluid className="p-3 row justify-content-center text-center">
       <div className="col-12 col-md-8 col-lg-6">
             <img
               src="/images/Trivia.jpg"

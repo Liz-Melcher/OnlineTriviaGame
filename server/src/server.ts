@@ -94,6 +94,10 @@ app.post("/register", async (req: Request, res: Response): Promise<void> => {
     }
   });
   
+// Fall back route. Tell user to go to home page.
+app.all('*splat', (_req, res) => {
+  res.redirect('/');
+});
 
 // ✅ Start Server After Models Are Synced
 sequelize.sync({ force: false, logging: false }).then(() => {

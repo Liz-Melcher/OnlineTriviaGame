@@ -40,57 +40,59 @@ const GameSettings: React.FC = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="p-3 row justify-content-center text-center">
       
       <h2>Customize Your Game</h2>
-      <Form>
-      <img
-              src="/images/Trivia.jpg"
-              alt="Trivia Game"
-              className="img-fluid rounded-circle mb-3 shadow"
+      <div className="col-12 col-md-8 col-lg-6">
+        <img
+          src="/images/Trivia.jpg"
+          alt="Trivia Game"
+          className="img-fluid rounded-circle mb-3 shadow"
+        />
+        <Form>
+          <Form.Group controlId="formNumQuestions" className="mb-3">
+            <Form.Label>Number of Questions</Form.Label>
+            <Form.Control
+              type="number"
+              min={1}
+              max={50}
+              value={numQuestions}
+              onChange={(e) => setNumQuestions(parseInt(e.target.value))}
             />
-        <Form.Group controlId="formNumQuestions" className="mb-3">
-          <Form.Label>Number of Questions</Form.Label>
-          <Form.Control
-            type="number"
-            min={1}
-            max={50}
-            value={numQuestions}
-            onChange={(e) => setNumQuestions(parseInt(e.target.value))}
-          />
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group controlId="formCategory" className="mb-3">
-          <Form.Label>Category</Form.Label>
-          <Form.Select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option>General Knowledge</option>
-            <option>Science & Nature</option>
-            <option>History</option>
-            <option>Geography</option>
-            <option>Entertainment: Music</option>
-            {/* Add more categories here if needed */}
-          </Form.Select>
-        </Form.Group>
+          <Form.Group controlId="formCategory" className="mb-3">
+            <Form.Label>Category</Form.Label>
+            <Form.Select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option>General Knowledge</option>
+              <option>Science & Nature</option>
+              <option>History</option>
+              <option>Geography</option>
+              <option>Entertainment: Music</option>
+              {/* Add more categories here if needed */}
+            </Form.Select>
+          </Form.Group>
 
-        <Form.Group controlId="formDifficulty" className="mb-3">
-          <Form.Label>Difficulty</Form.Label>
-          <Form.Select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </Form.Select>
-        </Form.Group>
+          <Form.Group controlId="formDifficulty" className="mb-3">
+            <Form.Label>Difficulty</Form.Label>
+            <Form.Select
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+            >
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </Form.Select>
+          </Form.Group>
 
-        <Button variant="primary" onClick={handleStartGame}>
-          Start Game
-        </Button>
-      </Form>
+          <Button variant="primary" onClick={handleStartGame}>
+            Start Game
+          </Button>
+        </Form>
+      </div>
     </Container>
   );
 };
