@@ -1,0 +1,97 @@
+<mxfile host="65bd71144e">
+    <diagram id="WUxMn5hTn4TNP6fclGzV" name="Page-1">
+        <mxGraphModel dx="1177" dy="1886" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Server Side" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="-680" width="410" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="shape=actor;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="300" y="50" width="80" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="User information:&amp;nbsp;&lt;div&gt;ID: String&lt;/div&gt;&lt;div&gt;username: string&lt;/div&gt;&lt;div&gt;Password: string&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="170" y="50" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="Game State:&lt;br&gt;Difficulty: string (easy, medium, hard)&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Number of questions: number (10, 25, 50)&lt;br&gt;Category: string&lt;/span&gt;&lt;div&gt;Questions: returns an array&lt;/div&gt;&lt;div&gt;Current question selects the current question from the array.&amp;nbsp;&lt;br&gt;&lt;div&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;br&gt;&lt;/font&gt;One user can have zero or one active games.&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=middle;" vertex="1" parent="2">
+                    <mxGeometry x="15" y="240" width="250" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="User Token from Bcyrpt" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="50" y="60" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="User preferred settings:&amp;nbsp;&lt;div&gt;Dark or light mode&lt;/div&gt;&lt;div&gt;difficulty level&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="60" y="140" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="Open Trivia API Query&amp;nbsp;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="2">
+                    <mxGeometry x="15" y="390" width="200" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Difficulty (easy, medium, hard)&lt;br&gt;Number of questions (10, 25, 50)&lt;br&gt;Type of questions (always multiple choice)&lt;br&gt;Category of questions&lt;br&gt;&lt;br&gt;This should return an array of questions to be saved in the game state" style="whiteSpace=wrap;html=1;" vertex="1" parent="23">
+                    <mxGeometry x="10" y="30" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.388;entryY=1.007;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="2" source="23" target="20">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="High scores for the user&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;" vertex="1" parent="2">
+                    <mxGeometry x="240" y="480" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.95;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="2" source="20" target="23">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Client Side&amp;nbsp;" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="470" y="-680" width="340" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Login Page&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="110" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Sign up Page&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="85" y="30" width="130" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Home Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="180" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Game Setup Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="340" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Trivia Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="410" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="High Scores&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="480" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="User Settings&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4">
+                    <mxGeometry x="90" y="260" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="9" target="20">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.9;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="16" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=none;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="16" target="7">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.75;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="6" target="16">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="22" target="9">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="10" target="38">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="38" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="12" target="22">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=none;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="16" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=none;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="23" target="10">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
