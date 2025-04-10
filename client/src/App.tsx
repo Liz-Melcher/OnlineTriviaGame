@@ -9,22 +9,22 @@ import HighScores from './pages/HighScores';
 import Navigation from './components/Navigation'
 import SavedTriviaGame from './pages/SavedTriviaGame';
 
-import TokenServices from './utils/TokenServices';
+import { useAuth } from './AuthContext';
 
 const App: React.FC = () => {
-  // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const { loggedIn } = useAuth();
 
   return (
     <Router>
       <Navigation />
       <Routes>
-        <Route path="/" element={TokenServices.loggedIn() ? <Navigate to="/home" /> : <Login />} />
-        <Route path="/home" element={TokenServices.loggedIn()? <Home/> : <Login/>} />
-        <Route path="/setting" element={TokenServices.loggedIn()? <UserSetting /> : <Login/>} />
-        <Route path="/settings" element={TokenServices.loggedIn()?<GameSettings /> : <Login/>} />
-        <Route path="/quiz" element={TokenServices.loggedIn()?<TriviaGame />: <Login/>} />
-        <Route path="/savedquiz" element={TokenServices.loggedIn()?<SavedTriviaGame />: <Login/>} />
-        <Route path="/highscores" element={TokenServices.loggedIn()?<HighScores />: <Login/>} />
+        <Route path="/" element={ loggedIn ? <Navigate to="/home" /> : <Login />} />
+        <Route path="/home" element={ loggedIn ? <Home/> : <Navigate to="/" />} />
+        <Route path="/setting" element={ loggedIn ? <UserSetting /> : <Navigate to="/" /> } />
+        <Route path="/settings" element={ loggedIn ?<GameSettings /> : <Navigate to="/" />} />
+        <Route path="/quiz" element={ loggedIn ?<TriviaGame />: <Navigate to="/" />} />
+        <Route path="/savedquiz" element={ loggedIn ?<SavedTriviaGame />: <Navigate to="/" />} />
+        <Route path="/highscores" element={ loggedIn ?<HighScores />: <Navigate to="/" />} />
       </Routes>
     </Router>
   );
